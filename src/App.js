@@ -1,8 +1,12 @@
 import './App.css';
+import GameList from './components/GameList/GameList'
 
 function App() {
   return (
-    <p>This is a test :)</p>
+    <div>
+      <p>This is a test :)</p>
+      <GameList />
+    </div>
   );
 }
 
