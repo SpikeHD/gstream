@@ -5,7 +5,7 @@ I am not responsible for the content grabbed from the websites that this project
 # Goals
 
 - [ ] Basic React UI with Electron
-- [ ] At least one scraper
+- [x] At least one scraper
 - [ ] Direct link downloader
 - [ ] Torrent link downloader
 - [ ] Better UI
