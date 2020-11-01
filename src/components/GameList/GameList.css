@@ -21,6 +21,7 @@ body { background: #182733; color: white}
   color: white;
   font-family: 'Roboto',  sans-serif;
   font-size: 14px;
+  text-align: center;
 
   /* Flex */
   flex-grow: 1;
@@ -31,4 +32,9 @@ body { background: #182733; color: white}
 .gameListItem:hover {
   cursor: pointer;
   border: 1px solid white
+}
+
+.gameListItem img {
+  display: block;
+  margin: 0 auto;
 }
