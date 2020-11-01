@@ -28,7 +28,7 @@ module.exports = async () => {
     // Get name and link
     list.each((i, e) => {
       games.push({
-        name: $(e).find('a').text().trim(),
+        name: $(e).find('a').text().trim().split(' - v')[0],
         link: $(e).find('a').prop('href')
       })
     })
