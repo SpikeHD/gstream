@@ -11,7 +11,7 @@ I am not responsible for the content grabbed from the websites that this project
 - [ ] Direct link downloader
 - [ ] Torrent link downloader
 - [ ] Better UI
-- [ ] More scapers
+- [ ] More scrapers
 
 # Development
 
