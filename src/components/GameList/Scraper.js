@@ -9,6 +9,5 @@ const axios = require('axios')
  */
 exports.getFitgirl = async (homepage) => {
   const res = await axios.get('http://localhost:3001/fitgirl')
-
-  return res.data
+  return res.data.data
 }

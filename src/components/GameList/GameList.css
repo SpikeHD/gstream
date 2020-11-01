@@ -1,0 +1,28 @@
+body { background: #182733; color: white}
+
+#gameList {
+  /* General */
+
+  /* Flex */
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+}
+
+.gameListItem {
+  /* General */
+  display: inline-block;
+  background: #3b4f5e;
+  padding: 8px;
+  margin: 4px;
+  border-radius: 5px;
+  color: white;
+  font-family: 'Roboto',  sans-serif;
+  font-size: 14px;
+
+  /* Flex */
+  flex-grow: 1;
+  flex-basis: 15%;
+  height: 200px;
+}
