@@ -1,11 +1,10 @@
 const cheerio = require('cheerio')
 const axios = require('axios')
-const fs = require('fs')
 
 /**
  * Get JSON formatted fitgirl repacks.
  */
-module.exports = async () => {
+module.exports.getAllGames = async (homepage) => {
   // Placeholder while settings page doesn't exist yet
   homepage = 'https://fitgirl-repacks.to/all-my-repacks-a-z/'
 
@@ -35,4 +34,33 @@ module.exports = async () => {
   }
 
   return games
+}
+
+/**
+ * Get details of FitGirl game page.
+ * 
+ * @param {String} link 
+ */
+module.exports.getGame = async (link) => {
+  const res = await axios.get(link)
+  const $ = cheerio.load(res.data)
+  const image = $('.entry-content p img').prop('src')
+  const links = $('.entry-content ul').first().find('li')
+  const parsed = []
+
+  links.each((i, e) => {
+    let thisLinks = []
+    
+    $(e).find('a').each((ind, el) => thisLinks.push({ title: $(el).text().trim(), link: $(el).prop('href')}))
+
+    parsed.push({
+      name: $(e).text().trim(),
+      links: thisLinks
+    })
+  })
+
+  return {
+    items: parsed,
+    image: image
+  }
 }

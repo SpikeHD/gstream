@@ -1,16 +1,22 @@
 const express = require('express')
 const cors = require('cors')
 const scraper = require('./scrapers')
+const qs = require('qs')
 const app = express()
 
 app.use(cors())
+app.use(express.json())
 
 app.get('/fitgirl', async (req, res) => {
-  const data = await scraper.fitgirl()
+  const data = await scraper.fitgirl.getAllGames()
 
-  console.log(data)
+  res.json(data)
+})
 
-  res.json({data: data})
+app.post('/fitgirl/game', async (req, res) => {
+  const data = await scraper.fitgirl.getGame(req.body.body.link)
+
+  res.json(data)
 })
 
 app.listen(3001, () => {

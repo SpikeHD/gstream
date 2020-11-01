@@ -21,9 +21,15 @@ class GameListItem extends React.Component {
     } catch(e) { console.log(e) }
   }
 
+  getGame = () => {
+    const escLink = encodeURIComponent(this.link)
+    const escName = encodeURIComponent(this.name)
+    window.location.assign(`/game?link=${escLink}&name=${escName}`)
+  }
+
   render() {
     return (
-      <div className="gameListItem" link={this.link} onClick={this.getRawgImage}>
+      <div className="gameListItem" link={this.link} onClick={this.getGame}>
         <img src={this.state.image} alt="Game Image" width="250"/>
         <p className="title">{this.name}</p>
       </div>

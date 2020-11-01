@@ -9,5 +9,15 @@ const axios = require('axios')
  */
 exports.getFitgirl = async (homepage) => {
   const res = await axios.get('http://localhost:3001/fitgirl')
-  return res.data.data
+  return res.data
+}
+
+/**
+ * Scrape info from FitGirl game page.
+ * 
+ * @param {String} link 
+ */
+exports.getFirgirlGame = async (link) => {
+  const res = await axios.post('http://localhost:3001/fitgirl/game', { body: { link: link } })
+  return res.data
 }

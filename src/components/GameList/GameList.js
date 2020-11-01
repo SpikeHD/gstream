@@ -16,7 +16,7 @@ class GameList extends React.Component {
     
     games.forEach(g => {
       list.push(
-        <GameListItem name={g.name} link={g.link} />
+        <GameListItem name={g.name} link={g.link}/>
       )
     })
 
