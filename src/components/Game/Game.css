@@ -36,4 +36,20 @@
 
 #game-root img {
   width: 200px;
+  padding: 12px;
+}
+
+#game-description {
+  overflow-y: scroll;
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+#game-description::-webkit-scrollbar {
+  display: none;
+}
+
+#details {
+  display: flex;
+  max-height: 300px;
 }

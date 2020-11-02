@@ -46,6 +46,7 @@ module.exports.getGame = async (link) => {
   const $ = cheerio.load(res.data)
   const image = $('.entry-content p img').prop('src')
   const links = $('.entry-content ul').first().find('li')
+  const description = $('.su-spoiler-content').first().text().trim()
   const parsed = []
 
   links.each((i, e) => {
@@ -61,6 +62,7 @@ module.exports.getGame = async (link) => {
 
   return {
     items: parsed,
-    image: image
+    image: image,
+    description: description
   }
 }

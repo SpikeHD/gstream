@@ -3,6 +3,7 @@ import './Game.css'
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome'
 import { faArrowLeft } from "@fortawesome/free-solid-svg-icons";
 import scraper from '../GameList/Scraper'
+import DownloadPopup from '../Download/DownloadPopup'
 import qs from 'qs'
 
 class Game extends React.Component {
@@ -14,7 +15,7 @@ class Game extends React.Component {
     this.name = decodeURIComponent(params.name)
     this.mainLink = decodeURIComponent(params.link)
 
-    this.state = {links: [], image: 'https://via.placeholder.com/200x300'}
+    this.state = {links: [], image: 'https://via.placeholder.com/200x300', description: ''}
   }
 
   componentDidMount = async () => {
@@ -27,7 +28,8 @@ class Game extends React.Component {
 
   getLinks = async () => {
     const data = await scraper.getFitgirlGame(this.mainLink)
-    this.setState({links: this.parseLinks(data.items), image: data.image})
+    console.log(data)
+    this.setState({links: this.parseLinks(data.items), image: data.image, description: data.description})
   }
 
   parseLinks = (links) => {
@@ -50,9 +52,14 @@ class Game extends React.Component {
     return(
       <div id="game-root">
         <button className="backButton" onClick={this.goHome}><FontAwesomeIcon icon={faArrowLeft}/></button>
-        <img src={this.state.image} alt="Game Cover"/>
-        <div className="game-description">
+        <div id="details">
+          <img src={this.state.image} alt="Game Cover"/>
+          <div id="game-description">
+            <div><b>{this.name}</b>
 
+            <p>{this.state.description}</p>
+            </div>
+          </div>
         </div>
         <div className="downloads">{this.state.links}</div>
       </div>
