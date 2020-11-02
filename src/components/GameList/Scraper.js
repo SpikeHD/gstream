@@ -1,12 +1,10 @@
 let fs
 let fgCache
-let window
 let ipcRenderer
 
 exports.setCache = (win, path, ipc) => {
-  fs = window.require('fs')
-  fgCache = path + '/gstream/fg.json'
-  window = win
+  fs = win.require('fs')
+  fgCache = path + '/gstream/'
   ipcRenderer = ipc
 }
 
@@ -18,14 +16,17 @@ exports.setCache = (win, path, ipc) => {
  * @param {String} homepage 
  */
 exports.getFitgirl = async (homepage) => {
-  const res = await ipcRenderer.invoke('fgAllGames')
-  const games = res.data
+  const games = await ipcRenderer.invoke('fgAllGames')
 
   // Caching Section
-  if (!fs.existsSync(fgCache)) {
-    fs.writeFileSync(fgCache, JSON.stringify(games), 'utf-8')
+  if (!fs.existsSync(fgCache + '/fg.json')) {
+    if (!fs.existsSync(fgCache)) {
+      await fs.mkdirSync(fgCache)
+    }
+
+    fs.writeFileSync(fgCache + '/fg.json', JSON.stringify(games), 'utf-8')
   } else {
-    let data = JSON.parse(fs.readFileSync(fgCache))
+    let data = JSON.parse(fs.readFileSync(fgCache + '/fg.json'))
 
     games.forEach(g => {
       // Insert into correct position (instead of needing to sort array fully)
@@ -37,18 +38,18 @@ exports.getFitgirl = async (homepage) => {
       if (games.indexOf(g) === -1) data.splice(data.indexOf(g), 1)
     })
 
-    fs.writeFileSync(fgCache, JSON.stringify(data), 'utf-8')
+    fs.writeFileSync(fgCache + '/fg.json', JSON.stringify(data), 'utf-8')
   }
 
-  return res.data
+  return games
 }
 
 /**
  * Get cached games from appData.
  */
 module.exports.getCacheFitgirl = async () => {
-  if (fs.existsSync(fgCache)) {
-    return await JSON.parse(fs.readFileSync(fgCache))
+  if (fs.existsSync(fgCache + '/fg.json')) {
+    return await JSON.parse(fs.readFileSync(fgCache + '/fg.json'))
   } else {
     return await this.getFitgirl()
   }
@@ -61,5 +62,5 @@ module.exports.getCacheFitgirl = async () => {
  */
 exports.getFitgirlGame = async (link) => {
   const res = await ipcRenderer.invoke('fgGame', link)
-  return res.data
+  return res
 }

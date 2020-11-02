@@ -17,8 +17,13 @@ class Game extends React.Component {
     this.state = {links: [], image: 'https://via.placeholder.com/200x300'}
   }
 
-  componentDidMount() {
-    this.getLinks().then(() => this.parseLinks())
+  componentDidMount = async () => {
+    let ipcRenderer = window.require('electron').ipcRenderer
+    let path = ipcRenderer.invoke('getAppData')
+    
+    scraper.setCache(window, path, ipcRenderer)
+    await this.getLinks()
+    await this.parseLinks()
   }
 
   getLinks = async () => {

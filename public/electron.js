@@ -16,16 +16,13 @@ function createWindow() {
 app.whenReady().then(createWindow)
 
 ipcMain.handle('getAppData', () => {
-  console.log('get app data')
   return app.getPath('appData')
 })
 
 ipcMain.handle('fgAllGames', async () => {
-  console.log('fg all games')
   return await fg.getAllGames()
 })
 
 ipcMain.handle('fgGame', async (e, link) => {
-  console.log('fg game: ' + link)
   return await fg.getGame(link)
 })
