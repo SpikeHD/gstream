@@ -35,7 +35,7 @@ class GameList extends React.Component {
   getGames = async (query) => {
     let arr = await scraper.getCacheFitgirl()
     if (query && query.length > 0) {
-      arr = arr.filter(g => g.name.toLowerCase().includes(query))
+      arr = arr.filter(g => g.name.toLowerCase().replace(/[^a-zA-Z0-9 ]/g, '').includes(query))
     }
     this.setState({games: arr})
   }
