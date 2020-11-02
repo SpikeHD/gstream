@@ -37,7 +37,6 @@ class GameList extends React.Component {
     if (query && query.length > 0) {
       arr = arr.filter(g => g.name.toLowerCase().includes(query))
     }
-    console.log(arr)
     this.setState({games: arr})
   }
 
