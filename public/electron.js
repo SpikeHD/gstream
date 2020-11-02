@@ -21,6 +21,7 @@ app.whenReady().then(async () => {
 
   let torrentsCache
 
+  // Get and start cached torrents
   if(fs.existsSync(app.getPath('appData') + '/gstream/torrents.json')) {
     torrentsCache = JSON.parse(fs.readFileSync(app.getPath('appData') + '/gstream/torrents.json'))
     torrentsCache.forEach(t => torrent.startDownload(t.magnet, t.path))

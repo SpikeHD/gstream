@@ -31,6 +31,7 @@ class DownloadBarBottom extends React.Component {
     }, 500)
   }
 
+  // Convert bytes to a better representation
   bytesToSize = (bytes) => {
     var sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB'];
     if (bytes === 0) return '0 Byte';
