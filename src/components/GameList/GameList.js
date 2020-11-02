@@ -10,52 +10,51 @@ class GameList extends React.Component {
   constructor(props) {
     super(props)
 
-    this.state = {gameList: [], games: [], query: ''}
+    this.state = {query: 'call', games: []}
     ipcRenderer = window.require('electron').ipcRenderer
   }
 
   componentDidMount = async () => {
     const path = await ipcRenderer.invoke('getAppData')
     scraper.setCache(window, path, ipcRenderer)
-    this.setState({games: await scraper.getCacheFitgirl()})
-    this.updateGames()
-  }
-
-  handleUpdate = async () => {
-    this.setState({games: await scraper.getFitgirl()})
+    this.getGames()
   }
 
   handleSearch = (evt) => {
-    const elm = evt.target
-    const query = elm.value
-
-    this.updateGames(query)
+    this.setState({query: evt.target.value.toLowerCase()}, () => {
+      this.getGames(this.state.query)
+    })
   }
 
-  updateGames = (query = '') => {
-    const games = this.state.games
-    let list = []
-
-    query = query.toLowerCase()
-    
-    games.forEach(g => {
-      list.push(
-        <GameListItem name={g.name} link={g.link}/>
-      )
+  handleUpdate = () => {
+    scraper.getFitgirl().then(fg => {
+      this.setState({games: fg})
     })
+  }
 
-    this.setState({gameList: list})
+  getGames = async (query) => {
+    let arr = await scraper.getCacheFitgirl()
+    if (query && query.length > 0) {
+      arr = arr.filter(g => g.name.toLowerCase().includes(query))
+    }
+    console.log(arr)
+    this.setState({games: arr})
+  }
+
+  renderGames = () => {
+    const games = this.state.games
+    return games.map(g => <GameListItem key={g.link} name={g.name} link={g.link} />)
   }
 
   render() {
     return(
       <div id="list-root">
         <div id="topBar">
-          <input type="text" onChange={this.handleSearch}></input>
+          <input placeholder="Search games..." type="text" onChange={this.handleSearch}></input>
           <FontAwesomeIcon icon={faSearch} />
           <button id="refresh" onClick={this.handleUpdate}><FontAwesomeIcon icon={faSync} /></button>
         </div>
-        <div id="gameList">{this.state.gameList}</div>
+        <div id="gameList">{this.renderGames()}</div>
       </div>
     )
   }

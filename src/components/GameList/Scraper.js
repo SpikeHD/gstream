@@ -12,10 +12,8 @@ exports.setCache = (win, path, ipc) => {
  * Scrape FitGirl repacks for links.
  * 
  * @todo Allow for preference of direct over torrent or vice-versa
- * 
- * @param {String} homepage 
  */
-exports.getFitgirl = async (homepage) => {
+exports.getFitgirl = async () => {
   const games = await ipcRenderer.invoke('fgAllGames')
 
   // Caching Section
@@ -28,20 +26,20 @@ exports.getFitgirl = async (homepage) => {
   } else {
     let data = JSON.parse(fs.readFileSync(fgCache + '/fg.json'))
 
-    games.forEach(g => {
-      // Insert into correct position (instead of needing to sort array fully)
-      if (data.indexOf(g) === -1) data.splice(games.indexOf(g), 0, g)
-    })
+    // games.forEach(g => {
+    //   // Insert into correct position (instead of needing to sort array fully)
+    //   if (data.indexOf(g) === -1) data.splice(games.indexOf(g), 0, g)
+    // })
 
-    data.forEach(g => {
-      // Remove from cache if it doesn't exist anymore
-      if (games.indexOf(g) === -1) data.splice(data.indexOf(g), 1)
-    })
+    // data.forEach(g => {
+    //   // Remove from cache if it doesn't exist anymore
+    //   if (games.indexOf(g) === -1) data.splice(data.indexOf(g), 1)
+    // })
 
     fs.writeFileSync(fgCache + '/fg.json', JSON.stringify(data), 'utf-8')
   }
 
-  return games
+  return games.filter((g, i) => games.indexOf(g) === i)
 }
 
 /**
@@ -49,7 +47,8 @@ exports.getFitgirl = async (homepage) => {
  */
 module.exports.getCacheFitgirl = async () => {
   if (fs.existsSync(fgCache + '/fg.json')) {
-    return await JSON.parse(fs.readFileSync(fgCache + '/fg.json'))
+    const games = await JSON.parse(fs.readFileSync(fgCache + '/fg.json'))
+    return await games.filter((g, i) => games.indexOf(g) === i)
   } else {
     return await this.getFitgirl()
   }
