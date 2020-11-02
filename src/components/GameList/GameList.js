@@ -1,5 +1,7 @@
 import './GameList.css';
 import React from 'react'
+import {FontAwesomeIcon} from '@fortawesome/react-fontawesome'
+import { faSync, faSearch } from "@fortawesome/free-solid-svg-icons";
 import GameListItem from './GameListItem'
 import scraper from './Scraper'
 let ipcRenderer
@@ -8,22 +10,33 @@ class GameList extends React.Component {
   constructor(props) {
     super(props)
 
-    this.state = {games: []}
+    this.state = {gameList: [], games: [], query: ''}
     ipcRenderer = window.require('electron').ipcRenderer
   }
 
   componentDidMount = async () => {
     const path = await ipcRenderer.invoke('getAppData')
     scraper.setCache(window, path, ipcRenderer)
-    this.parseFitgirl(await scraper.getCacheFitgirl())
+    this.setState({games: await scraper.getCacheFitgirl()})
+    this.updateGames()
   }
 
   handleUpdate = async () => {
-    return this.parseFitgirl(await scraper.getFitgirl())
+    this.setState({games: await scraper.getFitgirl()})
   }
 
-  parseFitgirl = async (games) => {
+  handleSearch = (evt) => {
+    const elm = evt.target
+    const query = elm.value
+
+    this.updateGames(query)
+  }
+
+  updateGames = (query = '') => {
+    const games = this.state.games
     let list = []
+
+    query = query.toLowerCase()
     
     games.forEach(g => {
       list.push(
@@ -31,15 +44,18 @@ class GameList extends React.Component {
       )
     })
 
-    this.setState({games: list})
+    this.setState({gameList: list})
   }
 
   render() {
     return(
       <div id="list-root">
-        <button onClick={this.handleUpdate}>Update/Refresh</button>
-        <input type="text"></input>
-        <div id="gameList">{this.state.games}</div>
+        <div id="topBar">
+          <input type="text" onChange={this.handleSearch}></input>
+          <FontAwesomeIcon icon={faSearch} />
+          <button id="refresh" onClick={this.handleUpdate}><FontAwesomeIcon icon={faSync} /></button>
+        </div>
+        <div id="gameList">{this.state.gameList}</div>
       </div>
     )
   }

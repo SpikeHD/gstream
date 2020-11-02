@@ -10,6 +10,42 @@ body { background: #182733; color: white}
   align-items: center;
 }
 
+#topBar {
+  margin: 16px;
+}
+
+#list-root input[type="text"] {
+  border: none;
+  border-bottom: 2px solid lightgrey;
+  background: transparent;
+  color: white;
+  font-size: 20px;
+}
+
+#list-root input[type="text"]:focus {
+  outline: none;
+}
+
+#list-root #refresh {
+  color: white;
+  background: transparent;
+  border: 1px solid white;
+  border-radius: 5px;
+  padding: 5px;
+  float: right;
+  display: block;
+}
+
+#list-root button:hover {
+  cursor: pointer;
+}
+
+#gameSearch {
+  width: 50%;
+  margin: 0;
+  padding: 0;
+}
+
 .gameListItem {
   /* General */
   display: inline-block;
