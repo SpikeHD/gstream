@@ -1,5 +1,7 @@
 const {app, BrowserWindow, ipcMain} = require('electron')
 const fg = require('./ipc/fitgirl')
+const torrent = require('./ipc/torrent')
+let curTorrents = []
 
 function createWindow() {
   const win = new BrowserWindow({
@@ -15,8 +17,8 @@ function createWindow() {
 
 app.whenReady().then(createWindow)
 
-ipcMain.handle('getAppData', () => {
-  return app.getPath('appData')
+ipcMain.handle('getPath', (e, arg) => {
+  return app.getPath(arg)
 })
 
 ipcMain.handle('fgAllGames', async () => {
@@ -25,4 +27,25 @@ ipcMain.handle('fgAllGames', async () => {
 
 ipcMain.handle('fgGame', async (e, link) => {
   return await fg.getGame(link)
+})
+
+ipcMain.handle('getTorrent', async (e, arg) => {
+  const t = curTorrents.find(c => c.name === arg)
+  return t
+})
+
+ipcMain.handle('getAllTorrents', async () => {
+  return curTorrents
+})
+
+ipcMain.handle('startMagnet', async (e, args) => {
+  const magnet = args[0]
+  const path = args[1]
+  const t = await torrent.startDownload(magnet, path)
+  curTorrents.push(t)
+
+  return {
+    timeLeft: t.timeRemaining,
+    name: t.name
+  }
 })

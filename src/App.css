@@ -7,3 +7,11 @@ a:hover {
   color: lightgrey;
   transition: color 0.3s;
 }
+
+input[type="text"] {
+  border: none;
+  border-bottom: 2px solid lightgrey;
+  background: transparent;
+  color: white;
+  font-size: 20px;
+}

@@ -14,10 +14,11 @@ class GameList extends React.Component {
     ipcRenderer = window.require('electron').ipcRenderer
   }
 
-  componentDidMount = async () => {
-    const path = await ipcRenderer.invoke('getAppData')
-    scraper.setCache(window, path, ipcRenderer)
-    this.getGames()
+  componentDidMount = () => {
+    ipcRenderer.invoke('getPath', 'appData').then(path => {
+      scraper.setCache(window, path, ipcRenderer)
+      this.getGames()
+    })
   }
 
   handleSearch = (evt) => {

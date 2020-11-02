@@ -15,12 +15,17 @@ class Game extends React.Component {
     this.name = decodeURIComponent(params.name)
     this.mainLink = decodeURIComponent(params.link)
 
-    this.state = {links: [], image: 'https://via.placeholder.com/200x300', description: ''}
+    this.state = {
+      links: [],
+      image: 'https://via.placeholder.com/200x300',
+      description: '',
+      popup: false
+    }
   }
 
   componentDidMount = async () => {
     let ipcRenderer = window.require('electron').ipcRenderer
-    let path = ipcRenderer.invoke('getAppData')
+    let path = ipcRenderer.invoke('getPath', 'appData')
     
     scraper.setCache(window, path, ipcRenderer)
     await this.getLinks()
@@ -37,11 +42,23 @@ class Game extends React.Component {
 
     links.forEach(l => {
       l.links.forEach(internal => {
-        domLinks.push(<a key={internal.link} href={internal.link}>{internal.title}</a>)
+        let clickFunc
+        let href = internal.link
+        if (internal.link.startsWith('magnet')) {
+          clickFunc = this.doDownloadPopup
+          href = '#'
+        }
+        domLinks.push(<a onClick={clickFunc} key={internal.link} link={internal.link} href={href}>{internal.title}</a>)
       })
     })
 
     return domLinks
+  }
+
+  doDownloadPopup = (evt) => {
+    const link = evt.target.getAttribute('link')
+    this.setState({popup: true, curLink: link})
+    document.getElementsByClassName('bm-overlay')[0].style.opacity = 1
   }
 
   goHome = () => {
@@ -51,6 +68,7 @@ class Game extends React.Component {
   render() {
     return(
       <div id="game-root">
+        {this.state.popup ? <DownloadPopup magnet={this.state.curLink}/>:null}
         <button className="backButton" onClick={this.goHome}><FontAwesomeIcon icon={faArrowLeft}/></button>
         <div id="details">
           <img src={this.state.image} alt="Game Cover"/>
