@@ -30,7 +30,7 @@ class GameListItem extends React.Component {
   render() {
     return (
       <div className="gameListItem" link={this.link} onClick={this.getGame}>
-        <img src={this.state.image} alt="Game Image" width="250"/>
+        <img src={this.state.image} alt="Game Screenshot" width="250"/>
         <p className="title">{this.name}</p>
       </div>
     )

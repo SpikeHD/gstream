@@ -1,7 +1,7 @@
 import './GameList.css';
 import React from 'react'
 import GameListItem from './GameListItem'
-import scraper from "./Scraper"
+import scraper from './Scraper'
 
 class GameList extends React.Component {
   constructor(props) {
@@ -10,8 +10,16 @@ class GameList extends React.Component {
     this.state = {games: []}
   }
 
-  parseFitgirl = async () => {
-    const games = await scraper.getFitgirl()
+  componentDidMount = async () => {
+    const ipcRenderer = window.require('electron').ipcRenderer
+    ipcRenderer.invoke('getAppData').then(path => {
+      scraper.setCache(window, path, ipcRenderer)
+      this.parseFitgirl(scraper.getCacheFitgirl())
+    })
+  }
+
+  parseFitgirl = async (games) => {
+    await games
     let list = []
     
     games.forEach(g => {
@@ -26,7 +34,7 @@ class GameList extends React.Component {
   render() {
     return(
       <div id="list-root">
-        <button onClick={this.parseFitgirl}>Press Me!</button>
+        <button onClick={this.parseFitgirl(scraper.getFitgirl())}>Update/Refresh</button>
         <div id="gameList">{this.state.games}</div>
       </div>
     )

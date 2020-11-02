@@ -1,7 +1,6 @@
 import React from 'react'
 import './Game.css'
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome'
-import { library } from "@fortawesome/fontawesome-svg-core";
 import { faArrowLeft } from "@fortawesome/free-solid-svg-icons";
 import scraper from '../GameList/Scraper'
 import qs from 'qs'
@@ -23,14 +22,12 @@ class Game extends React.Component {
   }
 
   getLinks = async () => {
-    const data = await scraper.getFirgirlGame(this.mainLink)
+    const data = await scraper.getFitgirlGame(this.mainLink)
     this.links = data
   }
 
   parseLinks = () => {
     let links = []
-
-    console.log(this.links.items)
 
     this.links.items.forEach(l => {
       l.links.forEach(internal => {
@@ -49,7 +46,7 @@ class Game extends React.Component {
     return(
       <div id="game-root">
         <button className="backButton" onClick={this.goHome}><FontAwesomeIcon icon={faArrowLeft}/></button>
-        <img src={this.state.image}/>
+        <img src={this.state.image} alt="Game Cover"/>
         <div className="game-description">
 
         </div>
