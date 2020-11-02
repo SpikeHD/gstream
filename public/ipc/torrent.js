@@ -6,3 +6,7 @@ exports.startDownload = async (magnet, path) => {
     path: path,
   })
 }
+
+exports.getClient = async () => {
+  return client
+}

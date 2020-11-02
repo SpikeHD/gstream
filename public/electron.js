@@ -38,6 +38,16 @@ ipcMain.handle('getAllTorrents', async () => {
   return curTorrents
 })
 
+ipcMain.handle('getClientProgress', async () => {
+  const client = await torrent.getClient()
+  
+  return {
+    progress: client.progress,
+    downloadSpeed: client.downloadSpeed,
+    uploadSpeed: client.uploadSpeed
+  }
+})
+
 ipcMain.handle('startMagnet', async (e, args) => {
   const magnet = args[0]
   const path = args[1]

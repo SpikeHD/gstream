@@ -1,0 +1,26 @@
+#bottom-download-container {
+  width: 100%;
+  background: darkgrey;
+  height: 20px;
+  position: fixed;
+  bottom: 0;
+}
+
+#bottom-download-progress {
+  height: 20px;
+  background: white;
+  display: inline-block;
+}
+
+#bottom-download-container p {
+  display: inline;
+  font-size: 16px;
+  vertical-align: middle;
+  margin: 0;
+  float: right;
+}
+
+#bottom-download-progress p {
+  color: grey;
+  margin-right: auto
+}

@@ -6,6 +6,7 @@ import './index.css';
 import App from './App';
 import Game from './components/Game/Game'
 import Sidebar from './components/Sidebar/Sidebar'
+import DownloadBarBottom from './components/Download/DownloadBarBottom'
 
 ReactDOM.render(
   <div>
@@ -16,6 +17,7 @@ ReactDOM.render(
       <Route path="/game" component={Game}/>
     </Switch>
   </Router>
+  <DownloadBarBottom />
   </div>,
   document.getElementById('root')
 );
