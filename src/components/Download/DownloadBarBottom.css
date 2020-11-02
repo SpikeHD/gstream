@@ -1,18 +1,35 @@
 #bottom-download-container {
   width: 100%;
-  background: darkgrey;
+  background-color: darkgrey;
   height: 20px;
   position: fixed;
   bottom: 0;
+  transition: height 0.2s;
 }
 
 #bottom-download-progress {
-  height: 20px;
-  background: white;
+  height: inherit;
+  background-color: white;
   display: inline-block;
 }
 
-#bottom-download-container p {
+#uploadSpeed,
+#downloadSpeed {
+  color: white;
+}
+
+#speeds {
+  word-wrap: none;
+  display: flex;
+  position: absolute;
+  top: -16px;
+  right: 0;
+  color: black;
+  z-index: 999;
+  margin: 0 10px;
+}
+
+#bottom-download-container #percentage {
   display: inline;
   font-size: 16px;
   vertical-align: middle;
@@ -20,7 +37,27 @@
   float: right;
 }
 
+#bottom-download-container:hover {
+  height: 70px;
+  transition: height 0.2s;
+}
+
 #bottom-download-progress p {
   color: grey;
   margin-right: auto
+}
+
+#uploadSpeed,
+#downloadSpeed {
+  flex: 1 0 auto;
+  display: block;
+  padding-left: 8px;
+}
+
+#extra {
+  position: absolute;
+  margin: 0 10px;
+  top: 35px;
+  right: 0;
+  color: white;
 }

@@ -1,4 +1,6 @@
 import React from 'react'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faArrowUp, faArrowDown } from "@fortawesome/free-solid-svg-icons";
 import './DownloadBarBottom.css'
 
 class DownloadBarBottom extends React.Component {
@@ -8,7 +10,9 @@ class DownloadBarBottom extends React.Component {
     this.state = {
       progress: 0,
       downloadSpeed: 0,
-      uploadSpeed: 0
+      uploadSpeed: 0,
+      totalItems: 0,
+      expanded: false
     }
 
     let ipcRenderer = window.require('electron').ipcRenderer
@@ -20,33 +24,41 @@ class DownloadBarBottom extends React.Component {
         this.setState({
           progress: client.progress,
           downloadSpeed: client.downloadSpeed,
-          uploadSpeed: client.uploadSpeed
+          uploadSpeed: client.uploadSpeed,
+          totalItems: client.items
         })
       }
-
-      console.log(this.state)
     }, 500)
   }
 
   bytesToSize = (bytes) => {
     var sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB'];
-    if (bytes == 0) return '0 Byte';
+    if (bytes === 0) return '0 Byte';
     var i = parseInt(Math.floor(Math.log(bytes) / Math.log(1024)));
-    return (bytes / Math.pow(1024, i)).toFixed(2) + ' ' + sizes[i] + '/s';
+    return (bytes / Math.pow(1024, i)).toFixed(2) + sizes[i] + '/s';
+  }
+
+  setExpanded = (cond) => {
+    this.setState({expanded: cond})
   }
 
   render() {
     return (
-      <div id="bottom-download-container">
+      <div id="bottom-download-container"
+      onMouseEnter={() => this.setExpanded(true)}
+      /*onMouseLeave={() => this.setExpanded(false)}*/>
         <div id="bottom-download-progress" style={
           {
             width: `${this.state.progress * 100}%`
           }
         }>
-          <p>{`${(this.state.progress * 100).toFixed(2)}%`}</p>
+          <p id="percentage">{`${(this.state.progress * 100).toFixed(2)}%`}</p>
         </div>
-          <p>{`Down: ${this.bytesToSize(this.state.downloadSpeed)}`}</p>
-          <p>{`Up: ${this.bytesToSize(this.state.uploadSpeed)}`}</p>
+        <div id="speeds">
+          <p id="downloadSpeed"><FontAwesomeIcon icon={faArrowDown}/> {this.bytesToSize(this.state.downloadSpeed)}</p>
+          <p id="uploadSpeed"><FontAwesomeIcon icon={faArrowUp}/> {this.bytesToSize(this.state.uploadSpeed)}</p>
+        </div>
+      {this.state.expanded ? <div id="extra">Downloading {this.state.totalItems} items</div>:null}
       </div>
     )
   }

@@ -1,5 +1,6 @@
 import React from 'react'
 import './DownloadPopup.css'
+let ipcRenderer
 
 class DownloadPopup extends React.Component {
   constructor(props) {
@@ -7,16 +8,18 @@ class DownloadPopup extends React.Component {
 
     this.magnet = props.magnet
     this.state = {defaultPath: '', path: ''}
+
+    ipcRenderer = window.require('electron').ipcRenderer
   }
 
   setPath = async () => {
-    window.require('electron').ipcRenderer.invoke('getPath', 'home').then(path => {
+    ipcRenderer.invoke('getPath', 'home').then(path => {
       this.setState({defaultPath: path, path: path})
     })
   }
 
   startMagnetDownload = () => {
-    window.require('electron').ipcRenderer.invoke('startMagnet', [this.magnet, this.state.path])
+    ipcRenderer.invoke('startMagnet', [this.magnet, this.state.path])
     this.show = false
   }
 
