@@ -5,13 +5,17 @@ import { createBrowserHistory } from 'history';
 import './index.css';
 import App from './App';
 import Game from './components/Game/Game'
+import Sidebar from './components/Sidebar/Sidebar'
 
 ReactDOM.render(
-  <Router history={createBrowserHistory()}>
+  <div>
+    <Sidebar />
+    <Router history={createBrowserHistory()}>
     <Switch>
       <Route exact path="/" component={App}/>
       <Route path="/game" component={Game}/>
     </Switch>
-  </Router>,
+  </Router>
+  </div>,
   document.getElementById('root')
 );

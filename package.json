@@ -14,11 +14,13 @@
     "qs": "^6.9.4",
     "rawger": "^1.3.2",
     "react": "^17.0.1",
+    "react-burger-menu": "^2.9.0",
     "react-dom": "^17.0.1",
     "react-router": "^5.2.0",
     "react-scripts": "4.0.0",
     "readline": "^1.3.0",
-    "web-vitals": "^0.2.4"
+    "web-vitals": "^0.2.4",
+    "webtorrent": "^0.109.2"
   },
   "scripts": {
     "start": "SET BROWSER=none && react-scripts start",

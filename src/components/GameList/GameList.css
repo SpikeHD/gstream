@@ -1,4 +1,4 @@
-body { background: #182733; color: white}
+body { background: #182733; color: white; margin: 0;}
 
 #gameList {
   /* General */
@@ -11,7 +11,8 @@ body { background: #182733; color: white}
 }
 
 #topBar {
-  margin: 16px;
+  padding: 16px;
+  margin-left: 50px;
 }
 
 #list-root input[type="text"] {
@@ -20,6 +21,10 @@ body { background: #182733; color: white}
   background: transparent;
   color: white;
   font-size: 20px;
+}
+
+#list-root input[type="text"]::placeholder {
+  color: lightgrey;
 }
 
 #list-root input[type="text"]:focus {

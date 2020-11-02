@@ -23,24 +23,23 @@ class Game extends React.Component {
     
     scraper.setCache(window, path, ipcRenderer)
     await this.getLinks()
-    await this.parseLinks()
   }
 
   getLinks = async () => {
     const data = await scraper.getFitgirlGame(this.mainLink)
-    this.links = data
+    this.setState({links: this.parseLinks(data.items), image: data.image})
   }
 
-  parseLinks = () => {
-    let links = []
+  parseLinks = (links) => {
+    let domLinks = []
 
-    this.links.items.forEach(l => {
+    links.forEach(l => {
       l.links.forEach(internal => {
-        links.push(<a href={internal.link}>{internal.title}</a>)
+        domLinks.push(<a key={internal.link} href={internal.link}>{internal.title}</a>)
       })
     })
 
-    this.setState({links: links})
+    return domLinks
   }
 
   goHome = () => {

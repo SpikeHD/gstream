@@ -1,0 +1,9 @@
+body {
+  font-family: 'Roboto', sans-serif;
+}
+
+button:hover,
+a:hover {
+  color: lightgrey;
+  transition: color 0.3s;
+}

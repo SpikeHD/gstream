@@ -14,9 +14,26 @@
 }
 
 #game-root button {
+  margin-left: 50px;
   display: block;
   background: none;
   border: none;
   color: white;
   font-size: 26px;
+  padding: 10px;
+}
+
+#game-root button:hover {
+  cursor: pointer;
+  color: lightgrey;
+
+  transition: color 0.3s;
+}
+
+#game-root button:focus {
+  outline: none;
+}
+
+#game-root img {
+  width: 200px;
 }
