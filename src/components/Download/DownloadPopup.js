@@ -7,6 +7,7 @@ class DownloadPopup extends React.Component {
     super(props)
 
     this.magnet = props.magnet
+    this.show = true
     this.state = {defaultPath: '', path: ''}
 
     ipcRenderer = window.require('electron').ipcRenderer
@@ -28,17 +29,19 @@ class DownloadPopup extends React.Component {
   }
 
   render() {
-    return(
-      <div className="dlpopup">
-        <div className="popup-section">
-          Download Location:
-          <input type="text" id="directory" ref={this.dirInput} onChange={this.setDownloadDir} placeholder="Path..." defaultValue={`C:/Users/Default/Downloads`}></input>
+    if (this.show) {
+      return(
+        <div className="dlpopup">
+          <div className="popup-section">
+            Download Location:
+            <input type="text" id="directory" ref={this.dirInput} onChange={this.setDownloadDir} placeholder="Path..." defaultValue={`C:/Users/Default/Downloads`}></input>
+          </div>
+          <div className="popup-section">
+            <button onClick={this.startMagnetDownload}>Start Download</button>
+          </div>
         </div>
-        <div className="popup-section">
-          <button onClick={this.startMagnetDownload}>Start Download</button>
-        </div>
-      </div>
-    )
+      )
+    } else return null
   }
 }
 

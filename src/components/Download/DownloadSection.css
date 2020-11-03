@@ -1,0 +1,30 @@
+.downloadSection {
+  background: #3b4f5e;
+  padding: 20px;
+  border-radius: 5px;
+}
+
+.downloadSection span {
+  padding: 0 6px;
+}
+
+.downloadSection .name {
+  text-decoration: underline;
+}
+
+.downloadSection .progressBar {
+  margin: 4px 6px;
+  width: 100%;
+  background-color: darkgrey;
+  height: 20px;
+}
+
+.downloadSection .progressUnder {
+  height: inherit;
+  background-color: white;
+}
+
+.downloadSection .progressMessage {
+  margin: 0 auto;
+  color: #182733;
+}

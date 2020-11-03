@@ -33,7 +33,6 @@ class Game extends React.Component {
 
   getLinks = async () => {
     const data = await scraper.getFitgirlGame(this.mainLink)
-    console.log(data)
     this.setState({links: this.parseLinks(data.items), image: data.image, description: data.description})
   }
 

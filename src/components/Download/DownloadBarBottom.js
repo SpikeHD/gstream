@@ -1,6 +1,7 @@
 import React from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faArrowUp, faArrowDown } from "@fortawesome/free-solid-svg-icons";
+import { bytesToSize } from './downloadUtil'
 import './DownloadBarBottom.css'
 
 class DownloadBarBottom extends React.Component {
@@ -31,14 +32,6 @@ class DownloadBarBottom extends React.Component {
     }, 500)
   }
 
-  // Convert bytes to a better representation
-  bytesToSize = (bytes) => {
-    var sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB'];
-    if (bytes === 0) return '0 Byte';
-    var i = parseInt(Math.floor(Math.log(bytes) / Math.log(1024)));
-    return (bytes / Math.pow(1024, i)).toFixed(2) + sizes[i] + '/s';
-  }
-
   setExpanded = (cond) => {
     this.setState({expanded: cond})
   }
@@ -56,8 +49,8 @@ class DownloadBarBottom extends React.Component {
           <p id="percentage">{`${(this.state.progress * 100).toFixed(2)}%`}</p>
         </div>
         <div id="speeds">
-          <p id="downloadSpeed"><FontAwesomeIcon icon={faArrowDown}/> {this.bytesToSize(this.state.downloadSpeed)}</p>
-          <p id="uploadSpeed"><FontAwesomeIcon icon={faArrowUp}/> {this.bytesToSize(this.state.uploadSpeed)}</p>
+          <p id="downloadSpeed"><FontAwesomeIcon icon={faArrowDown}/> {bytesToSize(this.state.downloadSpeed)}/s</p>
+          <p id="uploadSpeed"><FontAwesomeIcon icon={faArrowUp}/> {bytesToSize(this.state.uploadSpeed)}/s</p>
         </div>
       {this.state.expanded ? <div id="extra">Downloading {this.state.totalItems} items</div>:null}
       </div>

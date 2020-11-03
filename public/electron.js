@@ -19,6 +19,7 @@ function createWindow() {
 app.whenReady().then(async () => {
   createWindow()
 
+  /*
   let torrentsCache
 
   // Get and start cached torrents
@@ -26,6 +27,7 @@ app.whenReady().then(async () => {
     torrentsCache = JSON.parse(fs.readFileSync(app.getPath('appData') + '/gstream/torrents.json'))
     torrentsCache.forEach(t => torrent.startDownload(t.magnet, t.path))
   }
+  */
 })
 
 ipcMain.handle('getPath', (e, arg) => {
@@ -41,12 +43,14 @@ ipcMain.handle('fgGame', async (e, link) => {
 })
 
 ipcMain.handle('getTorrent', async (e, arg) => {
-  const t = curTorrents.find(c => c.name === arg)
+  const client = await torrent.getClient()
+  const t = client.torrents.find(c => c.name === arg)
   return t
 })
 
 ipcMain.handle('getAllTorrents', async () => {
-  return curTorrents
+  const client = await torrent.getClient()
+  return client.torrents
 })
 
 ipcMain.handle('getClientProgress', async () => {
@@ -60,21 +64,83 @@ ipcMain.handle('getClientProgress', async () => {
   }
 })
 
+ipcMain.handle('getAllTorrentDetails', async () => {
+  const client = await torrent.getClient()
+  return client.torrents.map(t => {
+    return {
+      name: t.name,
+      downloadSpeed: t.downloadSpeed,
+      totalDownloaded: t.downloaded,
+      uploadSpeed: t.uploadSpeed,
+      totalUploaded: t.uploaded,
+      timeRemaining: t.timeRemaining,
+      size: t.pieceLength + t.lastPieceLength,
+      magnetURI: t.magnetURI
+    }
+  })
+})
+
+ipcMain.handle('getIndividualTorrentsDetails', async (e, arg) => {
+  const client = await torrent.getClient()
+  // Use includes() because magnet is sometimes automatically shortened
+  const t = client.torrents.find(t => t.magnetURI.includes(arg) || t.name === arg)
+  if (t) {
+    return {
+      name: t.name,
+      downloadSpeed: t.downloadSpeed,
+      totalDownloaded: t.downloaded,
+      uploadSpeed: t.uploadSpeed,
+      totalUploaded: t.uploaded,
+      timeRemaining: t.timeRemaining,
+      progress: t.progress,
+      size: t.length,
+      magnetURI: t.magnetURI
+    }
+  } else return {name: 'none', magnetURI: 'none'}
+})
+
+ipcMain.handle('pauseTorrent', async (e, arg) => {
+  const client = await torrent.getClient()
+  const t = client.torrents.find(t => t.magnetURI.includes(arg) || t.name === arg)
+
+  if (t) {
+    t.pause()
+    return true
+  } else return false
+})
+
+ipcMain.handle('resumeTorrent', async (e, arg) => {
+  const client = await torrent.getClient()
+  const t = client.torrents.find(t => t.magnetURI.includes(arg) || t.name === arg)
+
+  if (t) {
+    t.add(t.magnetURI)
+    return true
+  } else return false
+})
+
+ipcMain.handle('destroyTorrent', async (e, arg) => {
+  const client = await torrent.getClient()
+  const t = client.torrents.find(t => t.magnetURI.includes(arg) || t.name === arg)
+
+  if (t) {
+    t.destroy()
+    return true
+  } else return false
+})
+
 ipcMain.handle('startMagnet', async (e, args) => {
   const magnet = args[0]
   const path = args[1]
-  const t = await torrent.startDownload(magnet, path)
-  const cTorrents = (await torrent.getClient()).torrents.map(tor => {
-    return {magnet: tor.magnetURI, path: tor.path}
-  })
-  curTorrents.push(t)
+  const client = await torrent.getClient()
 
-  await fs.writeFileSync(app.getPath('appData') + '/gstream/torrents.json', JSON.stringify(cTorrents), 'utf-8')
+  if (client.torrents.find(t => t.magnetURI.includes(args[0]))) return
+
+  const t = await torrent.startDownload(magnet, path)
+  curTorrents.push(t)
 
   // When finished, remove from cache
   t.on('done', async() => {
-    cTorrents.splice(cTorrents.indexOf(t.magnetURI), 1)
-    await fs.writeFileSync(app.getPath('appData') + '/gstream/torrents.json', JSON.stringify(cTorrents), 'utf-8')
   })
 
   return {
