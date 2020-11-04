@@ -21,7 +21,7 @@ function createWindow() {
   }
 }
 
-app.whenReady().then(async () => createWindow)
+app.whenReady().then(() => createWindow())
 
 ipcMain.handle('getPath', (e, arg) => {
   return app.getPath(arg)

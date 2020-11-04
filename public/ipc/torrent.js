@@ -20,7 +20,7 @@ exports.startDownload = async (magnet, path) => {
     this.removeFromCache(t.magnetURI)
   })
 
-  if (!cache.find(t => t.magnetURI.includes(magnet))) this.writeToCache(magnet, path)
+  if (!cache.find(t => t.magnetURI.includes(magnet))) this.writeToCache(t)
 
   return t
 }
@@ -35,7 +35,8 @@ exports.getClientProgress = async () => {
 }
 
 exports.getAllTorrentsDetails = async () => {
-  return client.torrents.map(t => {
+  let cached = this.readCache()
+  let list = client.torrents.map(t => {
     return {
       name: t.name,
       downloadSpeed: t.downloadSpeed,
@@ -47,10 +48,19 @@ exports.getAllTorrentsDetails = async () => {
       magnetURI: t.magnetURI
     }
   })
+
+  if (cached) {
+    cached = cached.filter(c => !list.includes(l => l.name === c.name))
+
+    list = list.concat(cached)
+  }
+
+  return list
 }
 
 exports.getIndividualTorrentsDetails = async (arg) => {
   const t = client.torrents.find(t => t.magnetURI.includes(arg) || t.name === arg)
+  const cached = await this.getFromCache(arg)
   if (t) {
     return {
       name: t.name,
@@ -63,7 +73,9 @@ exports.getIndividualTorrentsDetails = async (arg) => {
       size: t.length,
       magnetURI: t.magnetURI
     }
-  } else return {name: 'none', magnetURI: 'none'}
+  } else if (cached) {
+    return cached
+  }
 }
 
 exports.startMagnet = async (args) => {
@@ -84,6 +96,7 @@ exports.pauseTorrent = async (arg) => {
   const t = client.torrents.find(t => t.magnetURI.includes(arg) || t.name === arg)
 
   if (t) {
+    // Make sure to write updated info to cache
     t.destroy({destroyStore: false})
     return true
   } else return false
@@ -109,13 +122,45 @@ exports.destroyTorrent = async (arg) => {
 
 /** Caching. Used for storing destroyed torrents so they can be unpaused later, or to start torrents after the program has closed and reopened */
 
-exports.writeToCache = async (magnet, path) => {
+exports.updateCache = async (torrent) => {
   const current = await this.readCache()
-  if (current.find(t => t.magnetURI.includes(magnet))) return false
+  const found = current.find(t => t.magnetURI.includes(torrent.magnetURI) || torrent.magnetURI.includes(t.magnetURI))
+
+  if (found) {
+    current[current.indexOf(found)] = {
+      path: torrent.path,
+      name: torrent.name,
+      downloadSpeed: 0,
+      totalDownloaded: torrent.downloaded,
+      uploadSpeed: 0,
+      totalUploaded: torrent.uploaded,
+      timeRemaining: 0,
+      size: torrent.pieceLength + torrent.lastPieceLength,
+      magnetURI: torrent.magnetURI
+    }
+  }
+
+  console.log(current)
+
+  fs.writeFileSync(app.getPath('appData') + '/gstream/torrents.json', JSON.stringify(current), 'utf-8')
+
+  return true
+}
+
+exports.writeToCache = async (torrent) => {
+  const current = await this.readCache()
+  if (current.find(t => t.magnetURI.includes(torrent.magnet))) return false
 
   current.push({
-    magnetURI: magnet,
-    path: path
+    path: torrent.path,
+    name: torrent.name,
+    downloadSpeed: 0,
+    totalDownloaded: torrent.downloaded,
+    uploadSpeed: 0,
+    totalUploaded: torrent.uploaded,
+    timeRemaining: 0,
+    size: torrent.pieceLength + torrent.lastPieceLength,
+    magnetURI: torrent.magnetURI
   })
 
   fs.writeFileSync(app.getPath('appData') + '/gstream/torrents.json', JSON.stringify(current), 'utf-8')
