@@ -5,7 +5,7 @@ import { faArrowLeft } from "@fortawesome/free-solid-svg-icons";
 import DownloadPopup from '../Download/DownloadPopup'
 import qs from 'qs'
 
-const scraper = require('../GameList/scraper')
+const scraper = require('../GameList/Scraper')
 
 class Game extends React.Component {
   constructor(props) {

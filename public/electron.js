@@ -11,7 +11,7 @@ function createWindow() {
       nodeIntegration: true
     }
   })
-  win.loadURL('http://localhost:3000')
+  win.loadFile('../build/index.html')
 
   const cache = torrent.readCache()
   if(cache.length > 0) {
