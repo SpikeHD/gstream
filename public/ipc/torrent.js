@@ -20,7 +20,11 @@ exports.startDownload = async (magnet, path) => {
     this.removeFromCache(t.magnetURI)
   })
 
-  if (!cache.find(t => t.magnetURI.includes(magnet))) this.writeToCache(t)
+  t.on('metadata', () => {
+    // In case it hasn't started already
+    t.resume()
+    if (!cache.find(t => t.magnetURI.includes(magnet))) this.writeToCache(t)
+  })
 
   return t
 }
@@ -58,7 +62,7 @@ exports.getAllTorrentsDetails = async () => {
 }
 
 exports.getIndividualTorrentsDetails = async (arg) => {
-  const t = client.torrents.find(t => t.magnetURI.includes(arg) || t.name === arg)
+  const t = client.torrents.find(t => t.magnetURI.includes(arg) || arg.includes(t.magnetURI) || t.name === arg)
   const cached = await this.getFromCache(arg)
   if (t) {
     return {
@@ -115,6 +119,7 @@ exports.destroyTorrent = async (arg) => {
   const t = client.torrents.find(t => t.magnetURI.includes(arg) || arg.includes(t.magnetURI) || t.name === arg)
 
   if (t) {
+    await this.removeFromCache(t.magnetURI)
     t.destroy({destroyStore: true})
     return true
   } else return false
@@ -173,12 +178,12 @@ exports.getFromCache = async (magnet) => {
 
 exports.removeFromCache = async (magnet) => {
   const current = await this.readCache()
-  const cacheInstance = current.find(t => t.magnetURI.includes(magnet))
+  const cacheInstance = current.find(t => magnet.includes(t.magnetURI))
   if (!cacheInstance) return false
 
   current.splice(current.indexOf(cacheInstance), 1)
 
-  fs.readFileSync(app.getPath('appData') + '/gstream/torrents.json', JSON.stringify(current), 'utf-8')
+  await fs.writeFileSync(app.getPath('appData') + '/gstream/torrents.json', JSON.stringify(current), 'utf-8')
 }
 
 exports.readCache = () => {

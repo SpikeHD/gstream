@@ -4,25 +4,35 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faPause, faPlay, faTimes } from "@fortawesome/free-solid-svg-icons";
 import { bytesToSize } from './downloadUtil'
 let ipcRenderer
+let updateInterval
 
 class DownloadSection extends React.Component {
   constructor(props) {
     super(props)
     
-    this.state = {torrent: props.torrent, loaded: false, paused: false}
+    this.state = {torrent: props.torrent, loaded: false, paused: false, greyPlay: true, setInitialPlay: false}
 
     ipcRenderer = window.require('electron').ipcRenderer
 
-    setInterval(async () => {
+    updateInterval = setInterval(async () => {
       if (this.state.torrent.magnetURI) {
         const details = await ipcRenderer.invoke('getIndividualTorrentsDetails', this.state.torrent.magnetURI)
         this.setState({torrent: details, loaded: true})
+
+        if (details.downloadSpeed <= 0) this.setState({paused: true, greyPlay: true})
+        else if (!this.setInitialPlay) this.setState({paused: false, greyPlay: false, setInitialPlay: true})
       }
     }, 500)
   }
 
+  componentWillUnmount = () => {
+    clearInterval(updateInterval)
+  }
+
   stopTorrent = () => {
-    ipcRenderer.invoke('destroyTorrent', this.state.torrent.magnetURI)
+    ipcRenderer.invoke('destroyTorrent', this.state.torrent.magnetURI).then(removed => {
+      if (removed) this.setState({loaded: false})
+    })
   }
 
   pauseTorrent = () => {
@@ -51,7 +61,7 @@ class DownloadSection extends React.Component {
             </div>
             <div className="controls">
               <span>
-                {this.state.paused ? <FontAwesomeIcon icon={faPlay} onClick={this.startTorrent}/>:<FontAwesomeIcon icon={faPause} onClick={this.pauseTorrent} />}
+                {this.state.paused ? <FontAwesomeIcon icon={faPlay} className={this.state.greyPlay ? 'greyed':null} onClick={this.state.greyPlay ? null:this.startTorrent}/>:<FontAwesomeIcon icon={faPause} onClick={this.pauseTorrent} />}
               </span>
               <span>
                 <FontAwesomeIcon icon={faTimes} onClick={this.stopTorrent} />
