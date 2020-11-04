@@ -4,12 +4,18 @@
 
 I am not responsible for the content grabbed from the websites that this project can use. I am also not responsible for any legal issues you may face.
 
+# Usage
+
+Download the lastest release for your platform [here](https://github.com/SpikeHD/gstream/releases/) and run it. After that it should be fairly straight forward.
+
+\**Mac support coming when I buy (or somone buys me 👀) a Mac 😛*
+
 # Goals
 
-- [ ] Basic React UI with Electron
+- [x] Basic React UI with Electron
 - [x] At least one scraper
 - [ ] Direct link downloader
-- [ ] Torrent link downloader
+- [x] Torrent link downloader
 - [ ] Better UI
 - [ ] More scrapers
 
