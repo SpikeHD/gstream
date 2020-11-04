@@ -25,17 +25,6 @@ exports.getFitgirl = async () => {
     fs.writeFileSync(fgCache + '/fg.json', JSON.stringify(games), 'utf-8')
   } else {
     let data = JSON.parse(fs.readFileSync(fgCache + '/fg.json'))
-
-    // games.forEach(g => {
-    //   // Insert into correct position (instead of needing to sort array fully)
-    //   if (data.indexOf(g) === -1) data.splice(games.indexOf(g), 0, g)
-    // })
-
-    // data.forEach(g => {
-    //   // Remove from cache if it doesn't exist anymore
-    //   if (games.indexOf(g) === -1) data.splice(data.indexOf(g), 1)
-    // })
-
     fs.writeFileSync(fgCache + '/fg.json', JSON.stringify(data), 'utf-8')
   }
 
@@ -45,7 +34,7 @@ exports.getFitgirl = async () => {
 /**
  * Get cached games from appData.
  */
-module.exports.getCacheFitgirl = async () => {
+exports.getCacheFitgirl = async () => {
   if (fs.existsSync(fgCache + '/fg.json')) {
     const games = await JSON.parse(fs.readFileSync(fgCache + '/fg.json'))
     return await games.filter((g, i) => games.indexOf(g) === i)
@@ -63,3 +52,5 @@ exports.getFitgirlGame = async (link) => {
   const res = await ipcRenderer.invoke('fgGame', link)
   return res
 }
+
+export default exports

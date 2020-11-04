@@ -2,7 +2,7 @@ import React from 'react'
 import './Game.css'
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome'
 import { faArrowLeft } from "@fortawesome/free-solid-svg-icons";
-import scraper from '../GameList/Scraper'
+import scraper from '../GameList/scraper'
 import DownloadPopup from '../Download/DownloadPopup'
 import qs from 'qs'
 

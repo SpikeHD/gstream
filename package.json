@@ -1,6 +1,7 @@
 {
   "name": "gstream",
-  "version": "0.1.0",
+  "author": "SpikeHD",
+  "version": "0.2.0",
   "private": true,
   "dependencies": {
     "@fortawesome/fontawesome-svg-core": "^1.2.32",
@@ -29,7 +30,7 @@
     "eject": "react-scripts eject",
     "electron": "electron ./public/electron.js",
     "pack": "npm run build && electron-builder --dir",
-    "dist": "electron-builder"
+    "dist": "electron-builder -wl"
   },
   "eslintConfig": {
     "extends": [
