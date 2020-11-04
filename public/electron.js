@@ -1,5 +1,4 @@
 const {app, BrowserWindow, ipcMain} = require('electron')
-const fs = require('fs')
 const fg = require('./ipc/fitgirl')
 const torrent = require('./ipc/torrent')
 
@@ -13,21 +12,16 @@ function createWindow() {
     }
   })
   win.loadURL('http://localhost:3000')
+
+  const cache = torrent.readCache()
+  if(cache.length > 0) {
+    cache.forEach(c => {
+      torrent.startDownload(c.magnetURI, "")
+    })
+  }
 }
 
-app.whenReady().then(async () => {
-  createWindow()
-
-  /*
-  let torrentsCache
-
-  // Get and start cached torrents
-  if(fs.existsSync(app.getPath('appData') + '/gstream/torrents.json')) {
-    torrentsCache = JSON.parse(fs.readFileSync(app.getPath('appData') + '/gstream/torrents.json'))
-    torrentsCache.forEach(t => torrent.startDownload(t.magnet, t.path))
-  }
-  */
-})
+app.whenReady().then(async () => createWindow)
 
 ipcMain.handle('getPath', (e, arg) => {
   return app.getPath(arg)

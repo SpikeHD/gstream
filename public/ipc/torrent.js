@@ -3,10 +3,26 @@ const fs = require('fs')
 const { app } = require('electron')
 const client = new WebTorrent()
 
+try {
+  JSON.parse(fs.readFileSync(app.getPath('appData') + '/gstream/torrents.json'))
+} catch (e) {
+  fs.writeFileSync(app.getPath('appData') + '/gstream/torrents.json', '[]', 'utf-8')
+}
+
 exports.startDownload = async (magnet, path) => {
-  return await client.add(magnet, {
+  const cache = this.readCache()
+
+  const t = await client.add(magnet, {
     path: path,
   })
+
+  t.on('done', () => {
+    this.removeFromCache(t.magnetURI)
+  })
+
+  if (!cache.find(t => t.magnetURI.includes(magnet))) this.writeToCache(magnet, path)
+
+  return t
 }
 
 exports.getClientProgress = async () => {
@@ -58,10 +74,6 @@ exports.startMagnet = async (args) => {
 
   const t = await this.startDownload(magnet, path)
 
-  // When finished, remove from cache
-  t.on('done', async() => {
-  })
-
   return {
     timeLeft: t.timeRemaining,
     name: t.name
@@ -72,7 +84,7 @@ exports.pauseTorrent = async (arg) => {
   const t = client.torrents.find(t => t.magnetURI.includes(arg) || t.name === arg)
 
   if (t) {
-    t.pause()
+    t.destroy({destroyStore: false})
     return true
   } else return false
 }
@@ -81,7 +93,7 @@ exports.resumeTorrent = async (arg) => {
   const t = client.torrents.find(t => t.magnetURI.includes(arg) || t.name === arg)
 
   if (t) {
-    t.add(t.magnetURI)
+    client.add(t.magnetURI)
     return true
   } else return false
 }
@@ -90,7 +102,7 @@ exports.destroyTorrent = async (arg) => {
   const t = client.torrents.find(t => t.magnetURI.includes(arg) || t.name === arg)
 
   if (t) {
-    t.destroy()
+    t.destroy({destroyStore: true})
     return true
   } else return false
 }
@@ -126,6 +138,6 @@ exports.removeFromCache = async (magnet) => {
   fs.readFileSync(app.getPath('appData') + '/gstream/torrents.json', JSON.stringify(current), 'utf-8')
 }
 
-exports.readCache = async () => {
+exports.readCache = () => {
   return JSON.parse(fs.readFileSync(app.getPath('appData') + '/gstream/torrents.json'))
 }
