@@ -34,7 +34,9 @@ class DownloadPage extends React.Component {
   render() {
     return(
       <div id="downloadPage">
-        <span className="torrentSize">Currently downloading {this.state.torrents.length} torrent(s).</span>
+        <span className="torrentSize">
+          Currently downloading {this.state.torrents.length} torrent(s). {this.state.torrents.length <= 0 ? 'Head to the Game List to start downloading some!':null}
+        </span>
         {this.renderTorrents()}
       </div>
     )

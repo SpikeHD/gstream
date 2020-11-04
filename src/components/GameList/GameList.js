@@ -43,7 +43,14 @@ class GameList extends React.Component {
 
   renderGames = () => {
     const games = this.state.games
-    return games.map(g => <GameListItem key={g.link} name={g.name} link={g.link} />)
+    const map = games.map(g => <GameListItem key={g.link} name={g.name} link={g.link} />)
+    
+    if (map.length > 0) return map
+    else {
+      return(
+        <div className="loading"></div>
+      )
+    }
   }
 
   render() {
