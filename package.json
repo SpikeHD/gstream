@@ -1,7 +1,8 @@
 {
   "name": "gstream",
   "author": "SpikeHD",
-  "homepage": ".",
+  "homepage": "./",
+  "main": "public/electron.js",
   "version": "0.2.0",
   "private": true,
   "dependencies": {
@@ -13,6 +14,7 @@
     "@testing-library/user-event": "^12.1.10",
     "axios": "^0.21.0",
     "cheerio": "^1.0.0-rc.3",
+    "electron-is-dev": "^1.2.0",
     "qs": "^6.9.4",
     "rawger": "^1.3.2",
     "react": "^17.0.1",
@@ -26,13 +28,14 @@
     "webtorrent": "^0.109.2"
   },
   "scripts": {
-    "start": "SET BROWSER=none && react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test",
-    "eject": "react-scripts eject",
-    "electron": "electron ./public/electron.js",
-    "pack": "npm run build && electron-builder --dir",
-    "dist": "electron-builder -wl"
+    "react-start": "react-scripts start",
+    "react-build": "react-scripts build",
+    "react-test": "react-scripts test --env=jsdom",
+    "react-eject": "react-scripts eject",
+    "electron-build": "electron-builder",
+    "release": "yarn react-build && electron-builder",
+    "build": "yarn react-build && yarn electron-build",
+    "start": "concurrently \"cross-env BROWSER=none yarn react-start\" \"wait-on http://localhost:3000 && electron .\""
   },
   "eslintConfig": {
     "extends": [
@@ -53,7 +56,10 @@
     ]
   },
   "devDependencies": {
+    "concurrently": "^5.3.0",
+    "cross-env": "^7.0.2",
     "electron": "^10.1.5",
-    "electron-builder": "^22.9.1"
+    "electron-builder": "^22.9.1",
+    "wait-on": "^5.2.0"
   }
 }

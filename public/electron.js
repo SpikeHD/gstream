@@ -1,17 +1,25 @@
 const {app, BrowserWindow, ipcMain} = require('electron')
+const path = require('path')
 const fg = require('./ipc/fitgirl')
 const torrent = require('./ipc/torrent')
+
+const isDev = require("electron-is-dev")
 
 function createWindow() {
   const win = new BrowserWindow({
     width: 1200,
     height: 720,
     webPreferences: {
-      preload: './preload.js',
       nodeIntegration: true
     }
   })
-  win.loadFile('../build/index.html')
+  win.loadURL(
+    isDev
+      ? "http://localhost:3000"
+      : `file://${path.join(__dirname, "/index.html")}`
+  )
+
+  console.log(__dirname)
 
   const cache = torrent.readCache()
   if(cache.length > 0) {
