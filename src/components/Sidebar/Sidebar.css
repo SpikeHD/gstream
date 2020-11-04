@@ -54,6 +54,7 @@ Note: Beware of modifying this element as it can break the animations - you shou
 
 /* Individual item */
 .bm-item {
+  text-align: left;
   display: inline-block;
   color: white;
   text-decoration: none;
@@ -70,4 +71,9 @@ Note: Beware of modifying this element as it can break the animations - you shou
 /* Styling of overlay */
 .bm-overlay {
   background: rgba(0, 0, 0, 0.3);
+}
+
+.bm-item svg {
+  width: 20px !important;
+  padding-right: 10px;
 }

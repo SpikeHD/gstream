@@ -50,7 +50,7 @@ exports.getAllTorrentsDetails = async () => {
   })
 
   if (cached) {
-    cached = cached.filter(c => list.indexOf(list.find(l => l.name === c.name)) === -1)
+    cached = cached.filter(c => list.indexOf(list.find(l => l.magnetURI.includes(c.magnetURI))) === -1)
     list = list.concat(cached)
   }
 
