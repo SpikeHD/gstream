@@ -1,7 +1,7 @@
 import React from 'react';
-import { Router, Route, Switch } from 'react-router'
+import { HashRouter, Route, Switch } from 'react-router-dom'
 import ReactDOM from 'react-dom';
-import { createBrowserHistory } from 'history';
+import { createHashHistory } from 'history';
 import './index.css';
 import App from './App';
 import Game from './components/Game/Game'
@@ -12,13 +12,13 @@ import DownloadBarBottom from './components/Download/DownloadBarBottom'
 ReactDOM.render(
   <div>
     <Sidebar />
-    <Router history={createBrowserHistory()}>
+    <HashRouter history={createHashHistory()}>
     <Switch>
       <Route exact path="/" component={App}/>
       <Route path="/game" component={Game}/>
       <Route path="/downloads" component={DownloadPage}/>
     </Switch>
-  </Router>
+  </HashRouter>
   <DownloadBarBottom />
   </div>,
   document.getElementById('root')

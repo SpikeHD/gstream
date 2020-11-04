@@ -2,9 +2,10 @@ import React from 'react'
 import './Game.css'
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome'
 import { faArrowLeft } from "@fortawesome/free-solid-svg-icons";
-import scraper from '../GameList/scraper'
 import DownloadPopup from '../Download/DownloadPopup'
 import qs from 'qs'
+
+const scraper = require('../GameList/scraper')
 
 class Game extends React.Component {
   constructor(props) {
@@ -61,7 +62,7 @@ class Game extends React.Component {
   }
 
   goHome = () => {
-    window.location.assign('/')
+    window.location.assign('/#')
   }
 
   render() {

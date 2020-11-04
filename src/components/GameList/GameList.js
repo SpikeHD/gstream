@@ -3,7 +3,7 @@ import React from 'react'
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome'
 import { faSync, faSearch } from "@fortawesome/free-solid-svg-icons";
 import GameListItem from './GameListItem'
-import scraper from './scraper'
+const scraper = require('./scraper')
 let ipcRenderer
 
 class GameList extends React.Component {

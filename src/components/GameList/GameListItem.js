@@ -25,7 +25,7 @@ class GameListItem extends React.Component {
     // Store link and name in URI params
     const escLink = encodeURIComponent(this.link)
     const escName = encodeURIComponent(this.name)
-    window.location.assign(`/game?link=${escLink}&name=${escName}`)
+    window.location.assign(`#/game?link=${escLink}&name=${escName}`)
   }
 
   render() {

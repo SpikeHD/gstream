@@ -2,7 +2,7 @@ let fs
 let fgCache
 let ipcRenderer
 
-exports.setCache = (win, path, ipc) => {
+module.exports.setCache = (win, path, ipc) => {
   fs = win.require('fs')
   fgCache = path + '/gstream/'
   ipcRenderer = ipc
@@ -13,7 +13,7 @@ exports.setCache = (win, path, ipc) => {
  * 
  * @todo Allow for preference of direct over torrent or vice-versa
  */
-exports.getFitgirl = async () => {
+module.exports.getFitgirl = async () => {
   const games = await ipcRenderer.invoke('fgAllGames')
 
   // Caching Section
@@ -34,7 +34,7 @@ exports.getFitgirl = async () => {
 /**
  * Get cached games from appData.
  */
-exports.getCacheFitgirl = async () => {
+module.exports.getCacheFitgirl = async () => {
   if (fs.existsSync(fgCache + '/fg.json')) {
     const games = await JSON.parse(fs.readFileSync(fgCache + '/fg.json'))
     return await games.filter((g, i) => games.indexOf(g) === i)
@@ -48,9 +48,7 @@ exports.getCacheFitgirl = async () => {
  * 
  * @param {String} link 
  */
-exports.getFitgirlGame = async (link) => {
+module.exports.getFitgirlGame = async (link) => {
   const res = await ipcRenderer.invoke('fgGame', link)
   return res
 }
-
-export default exports
