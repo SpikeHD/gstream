@@ -20,7 +20,6 @@ class DownloadPage extends React.Component {
 
   getTorrentDetails = async () => {
     const torrents = await ipcRenderer.invoke('getAllTorrentDetails')
-    console.log(torrents)
     this.setState({torrents: torrents})
   }
 
