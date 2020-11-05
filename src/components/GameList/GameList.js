@@ -3,7 +3,8 @@ import React from 'react'
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome'
 import { faSync, faSearch } from "@fortawesome/free-solid-svg-icons";
 import GameListItem from './GameListItem'
-const scraper = require('./Scraper').default
+const Scraper = require('./Scraper').default
+let scraper
 let ipcRenderer
 
 class GameList extends React.Component {
@@ -16,7 +17,7 @@ class GameList extends React.Component {
 
   componentDidMount = () => {
     ipcRenderer.invoke('getPath', 'appData').then(path => {
-      scraper.setCache(window, path, ipcRenderer)
+      scraper = new Scraper(window, path, ipcRenderer)
       this.getGames()
     })
   }

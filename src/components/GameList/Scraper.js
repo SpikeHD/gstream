@@ -3,9 +3,9 @@ let fgCache
 let ipcRenderer
 
 class Scraper {
-  static setCache = (win, path, ipc) => {
+  constructor(win, path, ipc) {
     fs = win.require('fs')
-    fgCache = path + '/gstream/'
+    fgCache = path + '/fg.json'
     ipcRenderer = ipc
   }
 
@@ -14,7 +14,7 @@ class Scraper {
    * 
    * @todo Allow for preference of direct over torrent or vice-versa
    */
-  static getFitgirl = async () => {
+  getFitgirl = async () => {
     const games = await ipcRenderer.invoke('fgAllGames')
   
     // Caching Section
@@ -35,7 +35,7 @@ class Scraper {
   /**
    * Get cached games from appData.
    */
-  static getCacheFitgirl = async () => {
+  getCacheFitgirl = async () => {
     if (fs.existsSync(fgCache + '/fg.json')) {
       const games = await JSON.parse(fs.readFileSync(fgCache + '/fg.json'))
       return await games.filter((g, i) => games.indexOf(g) === i)
@@ -49,7 +49,7 @@ class Scraper {
    * 
    * @param {String} link 
    */
-  static getFitgirlGame = async (link) => {
+  getFitgirlGame = async (link) => {
     const res = await ipcRenderer.invoke('fgGame', link)
     return res
   }

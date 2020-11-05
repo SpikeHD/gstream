@@ -8,7 +8,8 @@ class Sidebar extends React.Component {
   constructor (props) {
     super(props)
     this.state = {
-      menuOpen: false
+      menuOpen: false,
+      basePath: props.basePath
     }
   }
 
@@ -16,12 +17,17 @@ class Sidebar extends React.Component {
     this.setState({menuOpen: state.isOpen})  
   }
 
-  closeMenu = () => {
+  closeMenu = (evt) => {
     this.setState({menuOpen: false})
+    this.goto(evt.target.getAttribute('link'))
   }
 
   toggleMenu = () => {
     this.setState(state => ({menuOpen: !state.menuOpen}))
+  }
+
+  goto = (url) => {
+    window.location.assign(window.location.origin + window.location.pathname + url)
   }
 
   render() {
@@ -30,9 +36,9 @@ class Sidebar extends React.Component {
         isOpen={this.state.menuOpen}
         onStateChange={(state) => this.handleStateChange(state)}
       >
-        <a href="#/" onClick={this.closeMenu}><FontAwesomeIcon icon={faGamepad} />Game List</a>
-        <a href="#/downloads" onClick={this.closeMenu}><FontAwesomeIcon icon={faDownload} />Downloads</a>
-        <a href="#/settings" onClick={this.closeMenu}><FontAwesomeIcon icon={faCog} />Settings</a>
+        <a link={'#'} onClick={this.closeMenu}><FontAwesomeIcon icon={faGamepad} />Game List</a>
+        <a link={'#/downloads'} onClick={this.closeMenu}><FontAwesomeIcon icon={faDownload} />Downloads</a>
+        <a link={'#/settings'} onClick={this.closeMenu}><FontAwesomeIcon icon={faCog} />Settings</a>
       </Menu>
     )
   }

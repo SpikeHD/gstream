@@ -5,7 +5,8 @@ import { faArrowLeft } from "@fortawesome/free-solid-svg-icons";
 import DownloadPopup from '../Download/DownloadPopup'
 import qs from 'qs'
 
-const scraper = require('../GameList/Scraper')
+const Scraper = require('../GameList/Scraper').default
+let scraper
 
 class Game extends React.Component {
   constructor(props) {
@@ -28,7 +29,7 @@ class Game extends React.Component {
     let ipcRenderer = window.require('electron').ipcRenderer
     let path = ipcRenderer.invoke('getPath', 'appData')
     
-    scraper.setCache(window, path, ipcRenderer)
+    scraper = new Scraper(window, path, ipcRenderer)
     await this.getLinks()
   }
 
@@ -43,12 +44,10 @@ class Game extends React.Component {
     links.forEach(l => {
       l.links.forEach(internal => {
         let clickFunc
-        let href = internal.link
         if (internal.link.startsWith('magnet')) {
           clickFunc = this.doDownloadPopup
-          href = '#'
         }
-        domLinks.push(<a onClick={clickFunc} key={internal.link} link={internal.link} href={href}>{internal.title}</a>)
+        domLinks.push(<a onClick={clickFunc} key={internal.link} link={internal.link}>{internal.title}</a>)
       })
     })
 
@@ -62,7 +61,7 @@ class Game extends React.Component {
   }
 
   goHome = () => {
-    window.location.assign('/#')
+    window.location.assign(window.location.origin + window.location.pathname + '#/')
   }
 
   render() {
