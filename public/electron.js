@@ -30,7 +30,10 @@ function createWindow() {
   }
 }
 
-app.whenReady().then(() => createWindow())
+app.whenReady().then(() => {
+  createWindow()
+  if (!isDev) win.removeMenu()
+})
 
 ipcMain.handle('getPath', (e, arg) => {
   return app.getPath(arg)

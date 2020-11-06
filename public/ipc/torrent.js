@@ -101,6 +101,7 @@ exports.pauseTorrent = async (arg) => {
 
   if (t) {
     // Make sure to write updated info to cache
+    await this.updateCache(t)
     t.destroy({destroyStore: false})
     return true
   } else return false

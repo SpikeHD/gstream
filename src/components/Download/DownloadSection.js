@@ -10,7 +10,7 @@ class DownloadSection extends React.Component {
   constructor(props) {
     super(props)
     
-    this.state = {torrent: props.torrent, loaded: false, paused: false, greyPlay: true, setInitialPlay: false}
+    this.state = {torrent: props.torrent, loaded: false, paused: false, setInitialPlay: false}
 
     ipcRenderer = window.require('electron').ipcRenderer
 
@@ -19,8 +19,8 @@ class DownloadSection extends React.Component {
         const details = await ipcRenderer.invoke('getIndividualTorrentsDetails', this.state.torrent.magnetURI)
         this.setState({torrent: details, loaded: true})
 
-        if (details.downloadSpeed <= 0) this.setState({paused: true, greyPlay: true})
-        else if (!this.setInitialPlay) this.setState({paused: false, greyPlay: false, setInitialPlay: true})
+        if (details.downloadSpeed <= 0) this.setState({paused: true})
+        else if (!this.setInitialPlay) this.setState({paused: false, setInitialPlay: true})
       }
     }, 500)
   }
@@ -31,7 +31,7 @@ class DownloadSection extends React.Component {
 
   stopTorrent = () => {
     ipcRenderer.invoke('destroyTorrent', this.state.torrent.magnetURI).then(removed => {
-      if (removed) this.setState({loaded: false})
+      if (removed) this.setState({paused: true, loaded: false})
     })
   }
 
@@ -48,7 +48,6 @@ class DownloadSection extends React.Component {
   }
 
   openFiles = () => {
-    console.log(this.state.torrent)
     ipcRenderer.invoke('openInFiles', this.state.torrent.path)
   }
 
@@ -65,8 +64,8 @@ class DownloadSection extends React.Component {
               }}><span className="progressMessage">{this.state.paused ? "Paused":null}</span></div>
             </div>
             <div className="controls">
-              <span>
-                {this.state.paused ? <FontAwesomeIcon icon={faPlay} className={this.state.greyPlay ? 'greyed':null} onClick={this.state.greyPlay ? null:this.startTorrent}/>:<FontAwesomeIcon icon={faPause} onClick={this.pauseTorrent} />}
+              <span className={!this.state.setInitialPlay ? 'greyed':null}>
+                {this.state.paused ? <FontAwesomeIcon icon={faPlay} onClick={!this.state.setInitialPlay ? null:this.startTorrent}/>:<FontAwesomeIcon icon={faPause} onClick={this.pauseTorrent} />}
               </span>
               <span>
                 <FontAwesomeIcon icon={faTimes} onClick={this.stopTorrent} />
