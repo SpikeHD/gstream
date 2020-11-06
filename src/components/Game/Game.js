@@ -62,7 +62,7 @@ class Game extends React.Component {
   }
 
   goHome = () => {
-    window.location.assign(window.location.origin + window.location.pathname + '#/')
+    window.location.assign('#/')
   }
 
   render() {

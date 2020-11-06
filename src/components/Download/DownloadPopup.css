@@ -9,6 +9,7 @@
   text-align: center;
   border-radius: 5px;
   border: 1px solid white;
+  transition: top 0.2s
 }
 
 .popup-section {

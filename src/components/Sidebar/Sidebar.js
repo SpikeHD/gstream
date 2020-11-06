@@ -27,7 +27,7 @@ class Sidebar extends React.Component {
   }
 
   goto = (url) => {
-    window.location.assign(window.location.origin + window.location.pathname + url)
+    window.location.assign(url)
   }
 
   render() {
@@ -36,7 +36,7 @@ class Sidebar extends React.Component {
         isOpen={this.state.menuOpen}
         onStateChange={(state) => this.handleStateChange(state)}
       >
-        <a link={'#'} onClick={this.closeMenu}><FontAwesomeIcon icon={faGamepad} />Game List</a>
+        <a link={'#/'} onClick={this.closeMenu}><FontAwesomeIcon icon={faGamepad} />Game List</a>
         <a link={'#/downloads'} onClick={this.closeMenu}><FontAwesomeIcon icon={faDownload} />Downloads</a>
         <a link={'#/settings'} onClick={this.closeMenu}><FontAwesomeIcon icon={faCog} />Settings</a>
       </Menu>

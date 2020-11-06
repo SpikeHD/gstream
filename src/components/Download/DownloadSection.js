@@ -52,7 +52,7 @@ class DownloadSection extends React.Component {
   }
 
   render() {
-    if(this.state.loaded) {
+    if(this.state.loaded && this.state.torrent) {
       return (
         <div>
           <div className="downloadSection">

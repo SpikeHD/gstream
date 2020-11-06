@@ -9,7 +9,6 @@ class DownloadPopup extends React.Component {
     console.log(props)
 
     this.magnet = props.magnet
-    this.clicked = false
     this.state = {defaultPath: '', path: ''}
 
     ipcRenderer = window.require('electron').ipcRenderer
@@ -23,8 +22,7 @@ class DownloadPopup extends React.Component {
 
   startMagnetDownload = (magnet) => {
     ipcRenderer.invoke('startDownload', [magnet, this.state.path])
-    this.clicked = true
-    this.forceUpdate()
+    window.location.assign('#/')
   }
 
   setDownloadDir = (evt) => {
@@ -32,7 +30,6 @@ class DownloadPopup extends React.Component {
   }
 
   render() {
-    console.log(this.clicked)
     return (
       <div className="dlpopup" style={
         this.props.popup && !this.clicked ?
