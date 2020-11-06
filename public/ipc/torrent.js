@@ -9,7 +9,7 @@ try {
   fs.writeFileSync(app.getPath('appData') + '/gstream/torrents.json', '[]', 'utf-8')
 }
 
-exports.startDownload = async (magnet, path) => {
+exports.startDownload = async (magnet, path, initial = false) => {
   const cache = this.readCache()
 
   const t = await client.add(magnet, {
@@ -29,7 +29,7 @@ exports.startDownload = async (magnet, path) => {
   // Shitty workaround for now. When a torrent is re-added to the Client, it may not start downloading, so we recreate it.
   // This unfortunately refreshes both torrents
   setTimeout(() => {
-    if (t.downloadSpeed <= 0) {
+    if (t.downloadSpeed <= 0 && !initial) {
       client = new WebTorrent()
       if(cache.length > 0) {
         cache.forEach(c => {

@@ -25,7 +25,7 @@ function createWindow() {
   const cache = torrent.readCache()
   if(cache.length > 0) {
     cache.forEach(c => {
-      torrent.startDownload(c.magnetURI, "")
+      torrent.startDownload(c.magnetURI, "", false)
     })
   }
 }
@@ -81,7 +81,7 @@ ipcMain.handle('openInFiles', async (e, fpath) => {
 ipcMain.handle('getClientProgress', async () => torrent.getClientProgress())
 ipcMain.handle('getAllTorrentDetails', async () => torrent.getAllTorrentsDetails())
 ipcMain.handle('getIndividualTorrentsDetails', async (e, arg) => torrent.getIndividualTorrentsDetails(arg))
-ipcMain.handle('startDownload', async (e, args) => torrent.startDownload(args[0], args[1]))
+ipcMain.handle('startDownload', async (e, args) => torrent.startDownload(args[0], args[1], true))
 ipcMain.handle('pauseTorrent', async (e, arg) => torrent.pauseTorrent(arg))
 ipcMain.handle('resumeTorrent', async (e, arg) => torrent.resumeTorrent(arg))
 ipcMain.handle('destroyTorrent', async (e, arg) => torrent.destroyTorrent(arg))
