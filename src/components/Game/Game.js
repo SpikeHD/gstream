@@ -68,7 +68,7 @@ class Game extends React.Component {
   render() {
     return(
       <div id="game-root">
-        {this.state.popup ? <DownloadPopup magnet={this.state.curLink}/>:null}
+        <DownloadPopup magnet={this.state.curLink} popup={this.state.popup}/>
         <button className="backButton" onClick={this.goHome}><FontAwesomeIcon icon={faArrowLeft}/></button>
         <div id="details">
           <img src={this.state.image} alt="Game Cover"/>

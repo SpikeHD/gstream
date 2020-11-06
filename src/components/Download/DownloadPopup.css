@@ -1,7 +1,7 @@
 .dlpopup {
   position: fixed;
   left: 50%;
-  top: 50%;
+  top: 200%;
   transform: translate(-50%, -50%);
   padding: 20px;
   background: #3b4f5e;
