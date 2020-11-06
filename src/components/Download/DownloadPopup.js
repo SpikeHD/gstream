@@ -28,7 +28,9 @@ class DownloadPopup extends React.Component {
     this.setState({path: evt.target.value})
   }
 
-  render() {
+  render() {  
+    // @todo Make disappear after startDownload
+
     if (this.show) {
       return(
         <div className="dlpopup">

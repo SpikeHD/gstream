@@ -1,7 +1,7 @@
 import React from 'react'
 import './DownloadSection.css'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faPause, faPlay, faTimes } from "@fortawesome/free-solid-svg-icons";
+import { faPause, faPlay, faTimes, faFolderOpen } from "@fortawesome/free-solid-svg-icons";
 import { bytesToSize } from './downloadUtil'
 let ipcRenderer
 let updateInterval
@@ -47,6 +47,11 @@ class DownloadSection extends React.Component {
     })
   }
 
+  openFiles = () => {
+    console.log(this.state.torrent)
+    ipcRenderer.invoke('openInFiles', this.state.torrent.path)
+  }
+
   render() {
     if(this.state.loaded) {
       return (
@@ -65,6 +70,9 @@ class DownloadSection extends React.Component {
               </span>
               <span>
                 <FontAwesomeIcon icon={faTimes} onClick={this.stopTorrent} />
+              </span>
+              <span className="fileOpen" > 
+                <button onClick={this.openFiles}><FontAwesomeIcon icon={faFolderOpen} /> Open in File Explorer</button>
               </span>
             </div>
           </div>

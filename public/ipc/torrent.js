@@ -67,6 +67,7 @@ exports.getIndividualTorrentsDetails = async (arg) => {
   if (t) {
     return {
       name: t.name,
+      path: t.path,
       downloadSpeed: t.downloadSpeed,
       totalDownloaded: t.downloaded,
       uploadSpeed: t.uploadSpeed,

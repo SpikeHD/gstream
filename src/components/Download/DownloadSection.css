@@ -7,6 +7,13 @@
 
 .downloadSection span {
   padding: 0 6px;
+  transition: color 0.3s;
+}
+
+.downloadSection .controls span:hover {
+  color: lightgrey !important;
+  transition: color 0.3s;
+  cursor: pointer;
 }
 
 .downloadSection .name {
@@ -32,4 +39,26 @@
 
 .downloadSection .greyed {
   color: darkgrey;
+}
+
+.fileOpen {
+  float: right;
+}
+
+.fileOpen button {
+  display: block;
+  background: none;
+  border: none;
+  color: white;
+  font-size: 16px;
+  padding: 2px;
+}
+
+.fileOpen button:focus {
+  border: none;
+  outline: none;
+}
+
+.fileOpen button:hover {
+  cursor: pointer;
 }

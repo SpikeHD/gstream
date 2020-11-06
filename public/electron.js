@@ -1,12 +1,15 @@
-const {app, BrowserWindow, ipcMain} = require('electron')
+const { app, BrowserWindow, ipcMain, dialog } = require('electron')
+const child_process = require('child_process')
 const path = require('path')
 const fg = require('./ipc/fitgirl')
 const torrent = require('./ipc/torrent')
 
 const isDev = require("electron-is-dev")
 
+let win
+
 function createWindow() {
-  const win = new BrowserWindow({
+  win = new BrowserWindow({
     width: 1200,
     height: 720,
     webPreferences: {
@@ -18,8 +21,6 @@ function createWindow() {
       ? "http://localhost:3000"
       : `file://${path.join(__dirname, "/index.html")}`
   )
-
-  console.log(__dirname)
 
   const cache = torrent.readCache()
   if(cache.length > 0) {
@@ -47,6 +48,30 @@ ipcMain.handle('getTorrent', async (e, arg) => {
   const client = await torrent.getClient()
   const t = client.torrents.find(c => c.name === arg)
   return t
+})
+
+ipcMain.handle('openDirSelect', async (args) => {
+  return dialog.showOpenDialogSync(win, {
+    title: args.title,
+    properties: ['openDirectory']
+  })
+})
+
+// https://jijnasu.in/electron-open-file-explorer-with-file-selected/
+ipcMain.handle('openInFiles', async (e, fpath) => {
+  let command
+  switch (process.platform) {
+    case 'darwin':
+      command = 'open -R ' + fpath
+      break
+    case 'win32':
+      command = 'start ' + fpath.replace(/\//g, '\\')
+      break;
+    default:
+      fpath = path.dirname(fpath)
+      command = 'xdg-open ' + fpath
+  }
+  child_process.exec(command)
 })
 
 // Torrent action handler

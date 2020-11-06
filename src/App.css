@@ -2,9 +2,13 @@ body {
   font-family: 'Roboto', sans-serif;
 }
 
+button, a {
+  transition: color 0.3s;
+}
+
 button:hover,
 a:hover {
-  color: lightgrey;
+  color: lightgrey !important;
   transition: color 0.3s;
 }
 
@@ -14,4 +18,8 @@ input[type="text"] {
   background: transparent;
   color: white;
   font-size: 20px;
+}
+
+a:not(href):hover {
+  cursor: pointer;
 }
