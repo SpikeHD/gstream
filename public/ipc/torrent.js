@@ -115,7 +115,7 @@ exports.resumeTorrent = async (arg) => {
   const t = cache.find(t => t.magnetURI.includes(arg) || arg.includes(t.magnetURI) || t.name === arg)
 
   if (t) {
-    await client.add(t.magnetURI).resume()
+    await client.add(t.magnetURI)
     return true
   } else return false
 }

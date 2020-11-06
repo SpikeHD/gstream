@@ -19,8 +19,6 @@ class DownloadSection extends React.Component {
         const details = await ipcRenderer.invoke('getIndividualTorrentsDetails', this.state.torrent.magnetURI)
         this.setState({torrent: details, loaded: true})
 
-        console.log(details.cache)
-
         if (details.downloadSpeed <= 0) this.setState({paused: true})
         else if (!this.setInitialPlay) this.setState({paused: false, setInitialPlay: true})
       }
