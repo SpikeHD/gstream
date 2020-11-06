@@ -21,7 +21,8 @@ class Game extends React.Component {
       links: [],
       image: 'https://via.placeholder.com/200x300',
       description: '',
-      popup: false
+      popup: false,
+      loaded: false
     }
   }
 
@@ -35,7 +36,7 @@ class Game extends React.Component {
 
   getLinks = async () => {
     const data = await scraper.getFitgirlGame(this.mainLink)
-    this.setState({links: this.parseLinks(data.items), image: data.image, description: data.description})
+    this.setState({links: this.parseLinks(data.items), image: data.image, description: data.description, loaded: true})
   }
 
   parseLinks = (links) => {
@@ -74,7 +75,7 @@ class Game extends React.Component {
           <div id="game-description">
             <div><b>{this.name}</b>
 
-            <p>{this.state.description}</p>
+            <p>{this.state.loaded ? this.state.description : <div className="loading"></div>}</p>
             </div>
           </div>
         </div>

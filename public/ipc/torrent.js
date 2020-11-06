@@ -1,7 +1,7 @@
 const WebTorrent = require('webtorrent')
 const fs = require('fs')
 const { app } = require('electron')
-const client = new WebTorrent()
+let client = new WebTorrent()
 
 try {
   JSON.parse(fs.readFileSync(app.getPath('appData') + '/gstream/torrents.json'))
@@ -26,7 +26,18 @@ exports.startDownload = async (magnet, path) => {
     if (!cache.find(t => t.magnetURI.includes(magnet))) this.writeToCache(t)
   })
 
-  return t
+  // Shitty workaround for now. When a torrent is re-added to the Client, it may not start downloading, so we recreate it.
+  // This unfortunately refreshes both torrents
+  setTimeout(() => {
+    if (t.downloadSpeed <= 0) {
+      client = new WebTorrent()
+      if(cache.length > 0) {
+        cache.forEach(c => {
+          this.startDownload(c.magnetURI, "")
+        })
+      }
+    }
+  }, 10000)
 }
 
 exports.getClientProgress = async () => {
@@ -54,7 +65,7 @@ exports.getAllTorrentsDetails = async () => {
   })
 
   if (cached) {
-    cached = cached.filter(c => list.indexOf(list.find(l => l.magnetURI.includes(c.magnetURI))) === -1)
+    cached = cached.filter(c => list.indexOf(list.find(l => l.magnetURI.includes(c.magnetURI) || c.magnetURI.includes(l.magnetURI))) === -1)
     list = list.concat(cached)
   }
 
@@ -85,20 +96,6 @@ exports.getIndividualTorrentsDetails = async (arg) => {
   }
 }
 
-exports.startMagnet = async (args) => {
-  const magnet = args[0]
-  const path = args[1]
-
-  if (client.torrents.find(t => t.magnetURI.includes(args[0]))) return
-
-  const t = await this.startDownload(magnet, path)
-
-  return {
-    timeLeft: t.timeRemaining,
-    name: t.name
-  }
-}
-
 exports.pauseTorrent = async (arg) => {
   const t = client.torrents.find(t => t.magnetURI.includes(arg) || arg.includes(t.magnetURI) || t.name === arg)
 
@@ -115,7 +112,7 @@ exports.resumeTorrent = async (arg) => {
   const t = cache.find(t => t.magnetURI.includes(arg) || arg.includes(t.magnetURI) || t.name === arg)
 
   if (t) {
-    await client.add(t.magnetURI)
+    await this.startDownload(t.magnetURI)
     return true
   } else return false
 }

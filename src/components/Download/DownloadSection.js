@@ -57,7 +57,10 @@ class DownloadSection extends React.Component {
         <div>
           <div className="downloadSection">
             <span className="name">{this.state.torrent.name}</span>
-            <span className="progress">{bytesToSize(this.state.torrent.totalDownloaded)}/{bytesToSize(this.state.torrent.size)}</span>
+            <span className="progress">
+              {bytesToSize(this.state.torrent.totalDownloaded)}/{bytesToSize(this.state.torrent.size)}
+              {this.state.torrent.downloadSpeed <= 0 && !this.state.setInitialPlay? <div className="loading-section"></div> : null}
+            </span>
             <div className="progressBar">
               <div className="progressUnder" style={{
                 'width': this.state.torrent.progress * 100 + '%'
