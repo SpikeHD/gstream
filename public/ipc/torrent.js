@@ -64,6 +64,7 @@ exports.getAllTorrentsDetails = async () => {
 exports.getIndividualTorrentsDetails = async (arg) => {
   const t = client.torrents.find(t => t.magnetURI.includes(arg) || arg.includes(t.magnetURI) || t.name === arg)
   const cached = await this.getFromCache(arg)
+
   if (t) {
     return {
       name: t.name,
@@ -78,6 +79,8 @@ exports.getIndividualTorrentsDetails = async (arg) => {
       magnetURI: t.magnetURI
     }
   } else if (cached) {
+    // Mark as cache for debugging
+    cached.cache = true
     return cached
   }
 }
@@ -112,7 +115,7 @@ exports.resumeTorrent = async (arg) => {
   const t = cache.find(t => t.magnetURI.includes(arg) || arg.includes(t.magnetURI) || t.name === arg)
 
   if (t) {
-    client.add(t.magnetURI)
+    await client.add(t.magnetURI).resume()
     return true
   } else return false
 }
