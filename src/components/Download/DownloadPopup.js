@@ -56,6 +56,7 @@ class DownloadPopup extends React.Component {
    */
   startMagnetDownload = (magnet) => {
     ipcRenderer.invoke('startDownload', [magnet, this.state.path])
+    this.props.closePopup()
     this.forceUpdate()
   }
 
