@@ -19,9 +19,9 @@ class GameListItem extends React.Component {
 
   componentDidMount = () => {
     // Routinely check if the element is visible. If it is, load it's image
-    this.interval = setInterval(() => {
+    this.interval = setInterval(async () => {
       if (this.state.image === placeholder && this.isVisible(this.renderedDOM)) {
-        this.getImage()
+        await this.getImage()
       }
     }, 500)
   }
@@ -47,7 +47,6 @@ class GameListItem extends React.Component {
   getImage = async () => {
     try {
       const image = await ipcRenderer.invoke('getImage', (this.link))
-  
       this.setState({image: image})
     } catch(e) { console.log(e) }
   }

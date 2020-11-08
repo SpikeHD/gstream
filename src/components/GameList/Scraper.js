@@ -19,7 +19,6 @@ class Scraper {
   
     // Caching Section
     if (!fs.existsSync(gameCache)) {
-      await fs.mkdirSync(gameCache)
       fs.writeFileSync(gameCache, JSON.stringify(games), 'utf-8')
     } else {
       let data = JSON.parse(fs.readFileSync(gameCache))

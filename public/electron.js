@@ -1,18 +1,26 @@
-const { app, BrowserWindow, ipcMain, dialog } = require('electron')
+const { app, BrowserWindow, ipcMain, dialog, protocol } = require('electron')
 const child_process = require('child_process')
 const path = require('path')
 const fs = require('fs')
-
 const settings = require('./ipc/settings')
-
-const moduleText = settings.getSettings().module
-const gameModule = require(`./modules/${moduleText}`)
+const gameModule = require(`./modules/${settings.getSettings().module}`)
 
 settings.setSetting('cachePath', gameModule.meta.cachePath)
 
 const torrent = require('./ipc/torrent')
-
 const isDev = require("electron-is-dev")
+
+if (gameModule.meta.imageCache) {
+  const images = gameModule.meta.imageCache
+
+  if (!fs.existsSync(app.getPath('appData') + '/gstream/images/')){
+    fs.mkdirSync(app.getPath('appData') + '/gstream/images/')
+  }
+
+  if (!fs.existsSync(images)) {
+    fs.mkdirSync(images)
+  }
+}
 
 let win
 
@@ -21,7 +29,8 @@ function createWindow() {
     width: 1280,
     height: 720,
     webPreferences: {
-      nodeIntegration: true
+      nodeIntegration: true,
+      webSecurity: !isDev
     }
   })
   // Use react localhost when on Dev, for hot reloading.
@@ -40,6 +49,11 @@ function createWindow() {
 }
 
 app.whenReady().then(() => {
+  protocol.registerFileProtocol('file', (request, callback) => {
+    const pathname = decodeURIComponent(request.url.replace('file:///', ''))
+    callback(pathname)
+  })
+
   createWindow()
   if (!isDev) win.removeMenu()
 })
@@ -115,7 +129,6 @@ ipcMain.handle('openInFiles', async (e, fpath) => {
 
 ipcMain.handle('getImage', async (e, link) => {
   const game = await gameModule.getGame(link)
-  
   return game.image
 })
 

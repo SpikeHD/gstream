@@ -2,7 +2,7 @@
   color: white;
   position: relative;
   font-size: 14px;
-  width: 70px;
+  width: 150px;
 }
 
 .select-list button {
@@ -23,7 +23,7 @@
   padding: 0;
   list-style: none;
   position: absolute;
-  width: 70px;
+  width: inherit;
 }
 
 .select-options li {

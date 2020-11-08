@@ -14,8 +14,8 @@ class Game extends React.Component {
 
     let params = qs.parse(this.props.location.search, { ignoreQueryPrefix: true })
 
-    this.name = decodeURIComponent(params.name)
-    this.mainLink = decodeURIComponent(params.link)
+    this.name = params.name
+    this.mainLink = params.link
 
     this.state = {
       links: [],
@@ -54,6 +54,7 @@ class Game extends React.Component {
     links.forEach(l => {
       l.links.forEach(internal => {
         let clickFunc
+        console.log(internal.link)
         if (internal.link.startsWith('magnet')) {
           clickFunc = this.doDownloadPopup
         }

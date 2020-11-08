@@ -7,11 +7,14 @@ const axios = require('axios')
 module.exports.meta = {
   name: 'FitGirl',
   description: 'Games list for FitGirl Repacks',
-  cachePath: 'fg.json'
+  cachePath: 'fg.json',
+  imageCache: null
 }
 
 /**
- * Get JSON formatted fitgirl repacks.
+ * Get JSON formatted games list.
+ * 
+ * @param {String} homepage
  */
 module.exports.getAllGames = async (homepage) => {
   const res = await axios.get(homepage)
@@ -44,7 +47,7 @@ module.exports.getAllGames = async (homepage) => {
 }
 
 /**
- * Get details of FitGirl game page.
+ * Get details of game page.
  * 
  * @param {String} link 
  */
