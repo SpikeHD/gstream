@@ -16,32 +16,16 @@ class GameListItem extends React.Component {
   }
 
   componentDidMount = () => {
-    if (this.props.scrolling) {
-      if (!this.isInvisible(this.renderedDOM)) {
+    setInterval(() => {
+      if (this.state.image === placeholder && this.isVisible(this.renderedDOM)) {
         this.getImage()
       }
-    }
+    }, 1000)
   }
 
-  isInvisible = (e) => {
-    const rect = e.getBoundingClientRect()
-    const vWidth = window.innerWidth || document.documentElement.clientWidth
-    const vHeight = window.innerHeight || document.documentElement.clientWidth
-    const efp = (x,y) => document.elementFromPoint(x, y)
-
-    // Not in viewport
-    if(rect.right < 0 ||
-      rect.bottom < 0 ||
-      rect.left > vWidth ||
-      rect.top > vHeight) return false
-
-    // If any corner is visible
-    return (
-      e.contains(efp(rect.left, rect.top))
-        || e.contains(efp(rect.right, rect.top))
-        || e.contains(efp(rect.right, rect.bottom))
-        || e.contains(efp(rect.left, rect.bottom))
-    )
+  isVisible = (e) => {
+    const top = e.getBoundingClientRect().top
+    return top >= 0 && top <= window.innerHeight;
   }
 
   getImage = async () => {
