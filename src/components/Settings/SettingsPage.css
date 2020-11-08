@@ -39,3 +39,10 @@
   font-size: inherit;
   outline: none;
 }
+
+.settingsSection .red {
+  margin: auto;
+  display: block;
+  color: red;
+  font-size: 16px;
+}

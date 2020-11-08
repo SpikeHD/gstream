@@ -21,7 +21,6 @@ class GameList extends React.Component {
     // When the list is loaded, create an instance of our scraper
     // that will write to cache
     ipcRenderer.invoke('getCachePath', cache).then(path => {
-      console.log(path)
       scraper = new Scraper(window, path, ipcRenderer)
       this.getGames()
     })

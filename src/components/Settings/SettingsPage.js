@@ -1,10 +1,15 @@
 import React from 'react'
+import ModuleDropdown from '../General/ModuleDropdown'
 import './SettingsPage.css'
+import {FontAwesomeIcon} from '@fortawesome/react-fontawesome'
+import { faInfoCircle } from "@fortawesome/free-solid-svg-icons";
 let ipcRenderer
 
 class SettingsPage extends React.Component {
   constructor(props) {
     super(props)
+
+    this.moduleChanged = false
 
     this.state = {
       modules: [],
@@ -20,38 +25,36 @@ class SettingsPage extends React.Component {
     this.setState({modules: list, settings: settings})
   }
 
-  renderModuleOptions = () => {
-    const DOMlist = this.state.modules.map(i => <option value={i.filename}>{i.name}</option>)
-    return DOMlist
-  }
-
   getCurrentSettings = async () => {
     return await ipcRenderer.invoke('getSettings')
   }
 
   handleSettingsChange = (field, value) => {
     ipcRenderer.invoke('setSetting', [field, value])
+
+    if (field === 'module') this.moduleChanged = true
+    this.forceUpdate()
   }
 
   render() {
     return(
       <div id="settingsPage">
         <div className="settingsSection">
+          <div style={{display: 'block', width: '100%', height: '40px'}}>
           <span className="right">
             <div>
-              <select selected={this.state.settings.module} onChange={
-                (evt) => {
-                  const val = evt.target.value
-                  this.handleSettingsChange('module', val)
-                }
-              }>
-                {this.renderModuleOptions()}
-              </select>
+              {this.state.modules.length > 0 ? 
+                <ModuleDropdown options={this.state.modules} defaultValue={this.state.settings.module} onSelect={(val) => this.handleSettingsChange('module', val)} /> : null
+              }
             </div>
           </span>
           <span className="left">
             <div>Selected game list module:</div>
           </span>
+          </div>
+          {this.moduleChanged ? 
+            <p className="red"><FontAwesomeIcon icon={faInfoCircle} /> Changing the current module requires a restart</p> : null
+          }
         </div>
         <div className="settingsSection">
           <span className="right">
