@@ -14,9 +14,6 @@ module.exports.meta = {
  * Get JSON formatted fitgirl repacks.
  */
 module.exports.getAllGames = async (homepage) => {
-  // Placeholder while settings page doesn't exist yet
-  homepage = 'https://fitgirl-repacks.to/all-my-repacks-a-z/'
-
   const res = await axios.get(homepage)
   let $ = cheerio.load(res.data)
   let games = []

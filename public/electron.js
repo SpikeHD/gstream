@@ -76,7 +76,7 @@ ipcMain.handle('getCachePath', () => {
 })
 
 ipcMain.handle('allGames', async () => {
-  return await gameModule.getAllGames()
+  return await gameModule.getAllGames(settings.getSettings().site)
 })
 
 ipcMain.handle('getGame', async (e, link) => {
