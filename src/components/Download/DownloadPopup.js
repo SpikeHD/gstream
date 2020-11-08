@@ -6,8 +6,6 @@ class DownloadPopup extends React.Component {
   constructor(props) {
     super(props)
 
-    console.log(props)
-
     this.magnet = props.magnet
     this.clicked = false
     this.state = {defaultPath: '', path: ''}
@@ -32,7 +30,6 @@ class DownloadPopup extends React.Component {
   }
 
   render() {
-    console.log(this.clicked)
     return (
       <div className="dlpopup" style={
         this.props.popup && !this.clicked ?
