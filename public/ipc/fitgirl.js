@@ -28,7 +28,8 @@ module.exports.getAllGames = async (homepage) => {
     list.each((i, e) => {
       games.push({
         name: $(e).find('a').text().trim().split(' - v')[0],
-        link: $(e).find('a').prop('href')
+        link: $(e).find('a').prop('href'),
+        image: null
       })
     })
   }

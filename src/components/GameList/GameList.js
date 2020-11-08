@@ -11,8 +11,14 @@ class GameList extends React.Component {
   constructor(props) {
     super(props)
 
+    this.scrolling = false
+
     this.state = {query: 'call', games: []}
     ipcRenderer = window.require('electron').ipcRenderer
+
+    setInterval(() => {
+      if (this.scrolling) this.scrolling = false
+    }, 100)
   }
 
   componentDidMount = () => {
@@ -20,12 +26,16 @@ class GameList extends React.Component {
       scraper = new Scraper(window, path, ipcRenderer)
       this.getGames()
     })
+
+    window.addEventListener('scroll', this.handleScroll())
   }
 
   handleSearch = (evt) => {
     this.setState({query: evt.target.value.toLowerCase()}, () => {
       this.getGames(this.state.query)
     })
+
+    this.forceUpdate()
   }
 
   handleUpdate = () => {
@@ -44,7 +54,7 @@ class GameList extends React.Component {
 
   renderGames = () => {
     const games = this.state.games
-    const map = games.map(g => <GameListItem key={g.link} name={g.name} link={g.link} />)
+    const map = games.map(g => <GameListItem key={g.link} name={g.name} link={g.link} scrolling={this.scrolling} />)
     
     if (map.length > 0) return map
     else {
@@ -52,6 +62,11 @@ class GameList extends React.Component {
         <div className="loading"></div>
       )
     }
+  }
+
+  handleScroll = () => {
+    this.scrolling = true
+    this.forceUpdate()
   }
 
   render() {
@@ -62,7 +77,7 @@ class GameList extends React.Component {
           <FontAwesomeIcon icon={faSearch} />
           <button id="refresh" onClick={this.handleUpdate}><FontAwesomeIcon icon={faSync} /></button>
         </div>
-        <div id="gameList">{this.renderGames()}</div>
+        <div rel={itm => this.DOMlist = itm} id="gameList" onScroll={this.handleScroll}>{this.renderGames()}</div>
       </div>
     )
   }

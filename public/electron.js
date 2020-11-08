@@ -1,6 +1,7 @@
 const { app, BrowserWindow, ipcMain, dialog } = require('electron')
 const child_process = require('child_process')
 const path = require('path')
+const fs = require('fs')
 const fg = require('./ipc/fitgirl')
 const torrent = require('./ipc/torrent')
 
@@ -10,7 +11,7 @@ let win
 
 function createWindow() {
   win = new BrowserWindow({
-    width: 1200,
+    width: 1280,
     height: 720,
     webPreferences: {
       nodeIntegration: true
@@ -75,6 +76,12 @@ ipcMain.handle('openInFiles', async (e, fpath) => {
       command = 'xdg-open ' + fpath
   }
   child_process.exec(command)
+})
+
+ipcMain.handle('getFitgirlImage', async (e, link) => {
+  const game = await fg.getGame(link)
+  
+  return game.image
 })
 
 // Torrent action handler
