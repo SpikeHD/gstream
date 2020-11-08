@@ -17,7 +17,7 @@ Download the lastest release for your platform [here](https://github.com/SpikeHD
 - [ ] Direct link downloader
 - [x] Torrent link downloader
 - [ ] Better UI
-- [ ] More scrapers
+- [x] More scrapers (technically done because of module support)
 - [ ] Other types (ROMs n' stuff maybe?)
 
 # Development
