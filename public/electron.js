@@ -1,7 +1,15 @@
 const { app, BrowserWindow, ipcMain, dialog } = require('electron')
 const child_process = require('child_process')
 const path = require('path')
-const fg = require('./ipc/fitgirl')
+const fs = require('fs')
+
+const settings = require('./ipc/settings')
+
+const moduleText = settings.getSettings().module
+const gameModule = require(`./modules/${moduleText}`)
+
+settings.setSetting('cachePath', gameModule.meta.cachePath)
+
 const torrent = require('./ipc/torrent')
 
 const isDev = require("electron-is-dev")
@@ -44,18 +52,35 @@ ipcMain.handle('getPath', (e, arg) => {
   return app.getPath(arg)
 })
 
-ipcMain.handle('getCachePath', (e, arg) => {
-  // TODO grab proper cache file from settings
-  arg = '/gstream/fg.json'
-  return app.getPath('appData') + arg
+ipcMain.handle('getSettings', async () => {
+  return await settings.getSettings()
+})
+
+ipcMain.handle('setSetting', async (e, args) => {
+  return await settings.setSetting(args[0], args[1])
+})
+
+ipcMain.handle('getModuleList', async () => {
+  // Requires in order to return meta info
+  return await fs.readdirSync(__dirname + '/modules').map(f => {
+    const meta = require(`./modules/${f}`).meta
+    // Add filename to meta
+    meta.filename = f
+    return meta
+  })
+})
+
+ipcMain.handle('getCachePath', () => {
+  let cache = settings.getSettings().cachePath
+  return app.getPath('appData') + '/gstream/' + cache
 })
 
 ipcMain.handle('allGames', async () => {
-  return await fg.getAllGames()
+  return await gameModule.getAllGames()
 })
 
 ipcMain.handle('getGame', async (e, link) => {
-  return await fg.getGame(link)
+  return await gameModule.getGame(link)
 })
 
 ipcMain.handle('getTorrent', async (e, arg) => {
@@ -89,7 +114,7 @@ ipcMain.handle('openInFiles', async (e, fpath) => {
 })
 
 ipcMain.handle('getImage', async (e, link) => {
-  const game = await fg.getGame(link)
+  const game = await gameModule.getGame(link)
   
   return game.image
 })

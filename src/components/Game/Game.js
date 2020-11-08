@@ -28,7 +28,8 @@ class Game extends React.Component {
 
   componentDidMount = async () => {
     let ipcRenderer = window.require('electron').ipcRenderer
-    let path = ipcRenderer.invoke('getCachePath')
+    let cache = await ipcRenderer.invoke('getSettings').cachePath
+    let path = await ipcRenderer.invoke('getCachePath', cache)
     
     scraper = new Scraper(window, path, ipcRenderer)
     await this.getLinks()

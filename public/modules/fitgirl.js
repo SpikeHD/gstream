@@ -2,6 +2,15 @@ const cheerio = require('cheerio')
 const axios = require('axios')
 
 /**
+ * Meta info for module display
+ */
+module.exports.meta = {
+  name: 'FitGirl',
+  description: 'Games list for FitGirl Repacks',
+  cachePath: 'fg.json'
+}
+
+/**
  * Get JSON formatted fitgirl repacks.
  */
 module.exports.getAllGames = async (homepage) => {
