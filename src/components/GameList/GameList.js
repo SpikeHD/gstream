@@ -43,8 +43,8 @@ class GameList extends React.Component {
    * Handles a manual refresh.
    */
   handleUpdate = () => {
-    scraper.getGames().then(fg => {
-      this.setState({games: fg})
+    scraper.getGames().then(games => {
+      this.setState({games: games})
     })
   }
 
