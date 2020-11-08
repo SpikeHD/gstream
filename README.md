@@ -28,6 +28,8 @@ If you plan on contributing (thank you!), here's what you should know:
 * `npm run pack` - Automatically builds with React as well as with electron.
 * `npm run dist`- Builds the executable. You'll find it in `./dist/`
 
+If you are on Linux, you must have `wine` installed in order to compile for Windows.
+
 ### Heads up!
 
 `electron-builder` is a bit [borked](https://github.com/electron-userland/electron-builder/issues/3569) right now and won't compile for linux unless it is done on a linux machine. If you are developing on Windows and the build fails after building the Windows binaries, don't worry, they should still be okay.
