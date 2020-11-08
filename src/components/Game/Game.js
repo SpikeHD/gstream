@@ -71,7 +71,7 @@ class Game extends React.Component {
   doDownloadPopup = (evt) => {
     const link = evt.target.getAttribute('link')
     this.setState({popup: true, curLink: link})
-    document.getElementsByClassName('bm-overlay')[0].style.opacity = 1
+    this.forceUpdate()
   }
 
   /**
@@ -84,7 +84,7 @@ class Game extends React.Component {
   render() {
     return(
       <div id="game-root">
-        <DownloadPopup magnet={this.state.curLink} popup={this.state.popup}/>
+        {this.state.popup ? <DownloadPopup magnet={this.state.curLink} closePopup={() => this.setState({popup: false})}/> : null}
         <button className="backButton" onClick={this.goHome}><FontAwesomeIcon icon={faArrowLeft}/></button>
         <div id="details">
           <img src={this.state.image} alt="Game Cover"/>

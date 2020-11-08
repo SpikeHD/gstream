@@ -1,7 +1,7 @@
 import React from 'react'
 import './DownloadPopup.css'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faFolderOpen } from "@fortawesome/free-solid-svg-icons";
+import { faFolderOpen, faTimes } from "@fortawesome/free-solid-svg-icons";
 let ipcRenderer
 
 class DownloadPopup extends React.Component {
@@ -9,7 +9,6 @@ class DownloadPopup extends React.Component {
     super(props)
 
     this.magnet = props.magnet
-    this.clicked = false
     this.state = {path: ''}
 
     ipcRenderer = window.require('electron').ipcRenderer
@@ -57,7 +56,6 @@ class DownloadPopup extends React.Component {
    */
   startMagnetDownload = (magnet) => {
     ipcRenderer.invoke('startDownload', [magnet, this.state.path])
-    this.clicked = true
     this.forceUpdate()
   }
 
@@ -85,16 +83,11 @@ class DownloadPopup extends React.Component {
 
   render() {
     return (
-      <div className="dlpopup" style={
-        this.props.popup && !this.clicked ?
-        {
-          'top': '50%'
-        }
-          :
-        {
-          'top': '200%'
-        }
-      }>
+      <div className="dlpopup">
+        <button className="popupClose" onClick={() => {
+          // Update parent state to remove popup
+          this.props.closePopup()
+        }}><FontAwesomeIcon icon={faTimes} /></button>
         <div className="popup-section">
           Download Location:
           <input type="text" id="directory" ref={this.dirInput} onChange={this.setDownloadDir} placeholder="Path..." value={this.state.path}></input>
