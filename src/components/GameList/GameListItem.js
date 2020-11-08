@@ -13,10 +13,12 @@ class GameListItem extends React.Component {
 
     ipcRenderer = window.require('electron').ipcRenderer
 
+    // Set the image as a placeholder until it loads
     this.state = {image: placeholder}
   }
 
   componentDidMount = () => {
+    // Routinely check if the element is visible. If it is, load it's image
     this.interval = setInterval(() => {
       if (this.state.image === placeholder && this.isVisible(this.renderedDOM)) {
         this.getImage()
@@ -25,14 +27,23 @@ class GameListItem extends React.Component {
   }
 
   componentWillUnmount = () => {
+    // Clear the interval if we aren't being rendered
     clearInterval(this.interval)
   }
 
+  /**
+   * Check if DOM element is viewable.
+   * 
+   * @param {DOMElement} e 
+   */
   isVisible = (e) => {
     const top = e.getBoundingClientRect().top
     return top >= 0 && top <= window.innerHeight;
   }
 
+  /**
+   * Get the image for the current game.
+   */
   getImage = async () => {
     try {
       const image = await ipcRenderer.invoke('getFitgirlImage', (this.link))
@@ -41,6 +52,9 @@ class GameListItem extends React.Component {
     } catch(e) { console.log(e) }
   }
 
+  /**
+   * Redirects to game page.
+   */
   getGame = () => {
     // Store link and name in URI params
     const escLink = encodeURIComponent(this.link)

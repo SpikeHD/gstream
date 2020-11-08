@@ -22,11 +22,17 @@ class DownloadPage extends React.Component {
     clearInterval(this.interval)
   }
 
+  /**
+   * Retrieves details of a torrent
+   */
   getTorrentDetails = async () => {
     const torrents = await ipcRenderer.invoke('getAllTorrentDetails')
     this.setState({torrents: torrents})
   }
 
+  /**
+   * Create and return an array of DownloadSection components with torrent details.
+   */
   renderTorrents = () => {
     this.getTorrentDetails()
 

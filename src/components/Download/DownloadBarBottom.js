@@ -32,6 +32,11 @@ class DownloadBarBottom extends React.Component {
     }, 500)
   }
 
+  /**
+   * Stretch and unstretch the bar if hovered.
+   * 
+   * @param {Boolean} cond 
+   */
   setExpanded = (cond) => {
     this.setState({expanded: cond})
   }

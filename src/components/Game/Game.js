@@ -34,11 +34,19 @@ class Game extends React.Component {
     await this.getLinks()
   }
 
+  /**
+   * Gets all links associated with game download (torrent and direct).
+   */
   getLinks = async () => {
     const data = await scraper.getFitgirlGame(this.mainLink)
     this.setState({links: this.parseLinks(data.items), image: data.image, description: data.description, loaded: true})
   }
 
+  /**
+   * Output formatted links for each raw link.
+   * 
+   * @param {Array} links 
+   */
   parseLinks = (links) => {
     let domLinks = []
 
@@ -55,12 +63,20 @@ class Game extends React.Component {
     return domLinks
   }
 
+  /**
+   * Changes the current popup elements "top" attribute which makes it appear.
+   * 
+   * @param {Object} evt 
+   */
   doDownloadPopup = (evt) => {
     const link = evt.target.getAttribute('link')
     this.setState({popup: true, curLink: link})
     document.getElementsByClassName('bm-overlay')[0].style.opacity = 1
   }
 
+  /**
+   * Back button.
+   */
   goHome = () => {
     window.location.assign(window.location.origin + window.location.pathname + '#/')
   }

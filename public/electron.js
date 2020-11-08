@@ -1,7 +1,6 @@
 const { app, BrowserWindow, ipcMain, dialog } = require('electron')
 const child_process = require('child_process')
 const path = require('path')
-const fs = require('fs')
 const fg = require('./ipc/fitgirl')
 const torrent = require('./ipc/torrent')
 
@@ -17,6 +16,7 @@ function createWindow() {
       nodeIntegration: true
     }
   })
+  // Use react localhost when on Dev, for hot reloading.
   win.loadURL(
     isDev
       ? "http://localhost:3000"
@@ -84,7 +84,10 @@ ipcMain.handle('getFitgirlImage', async (e, link) => {
   return game.image
 })
 
-// Torrent action handler
+/**
+ * This giant chunk is just the ipc handlers for the torrent functions.
+ * They're all basically self-explanatory.
+ */
 ipcMain.handle('getClientProgress', async () => torrent.getClientProgress())
 ipcMain.handle('getAllTorrentDetails', async () => torrent.getAllTorrentsDetails())
 ipcMain.handle('getIndividualTorrentsDetails', async (e, arg) => torrent.getIndividualTorrentsDetails(arg))
