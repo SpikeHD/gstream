@@ -40,6 +40,7 @@ Module must contain:
     * `name` - Name of module
     * `description` - Description of module
     * `cachePath` - Name of cache.json file (eg. `mymodule.json`)
+    * `imageCachePath` - Name of folder containing images (eg. `mymodule`, since it prepends the `{appData}/images/` path)
     
   * `async getAllGames(page)` function that returns an array of objects, each containing the fields:
     * `name` - Game name
