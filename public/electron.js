@@ -44,11 +44,11 @@ ipcMain.handle('getPath', (e, arg) => {
   return app.getPath(arg)
 })
 
-ipcMain.handle('fgAllGames', async () => {
+ipcMain.handle('allGames', async () => {
   return await fg.getAllGames()
 })
 
-ipcMain.handle('fgGame', async (e, link) => {
+ipcMain.handle('getGame', async (e, link) => {
   return await fg.getGame(link)
 })
 
@@ -82,7 +82,7 @@ ipcMain.handle('openInFiles', async (e, fpath) => {
   child_process.exec(command)
 })
 
-ipcMain.handle('getFitgirlImage', async (e, link) => {
+ipcMain.handle('getImage', async (e, link) => {
   const game = await fg.getGame(link)
   
   return game.image

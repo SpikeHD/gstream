@@ -10,12 +10,12 @@ class Scraper {
   }
 
   /**
-   * Scrape FitGirl repacks for links.
+   * Scrapefor links.
    * 
    * @todo Allow for preference of direct over torrent or vice-versa
    */
-  getFitgirl = async () => {
-    const games = await ipcRenderer.invoke('fgAllGames')
+  getGames = async () => {
+    const games = await ipcRenderer.invoke('allGames')
   
     // Caching Section
     if (!fs.existsSync(fgCache + '/fg.json')) {
@@ -35,22 +35,22 @@ class Scraper {
   /**
    * Get cached games from appData.
    */
-  getCacheFitgirl = async () => {
+  getGameCache = async () => {
     if (fs.existsSync(fgCache + '/fg.json')) {
       const games = await JSON.parse(fs.readFileSync(fgCache + '/fg.json'))
       return await games.filter((g, i) => games.indexOf(g) === i)
     } else {
-      return await this.getFitgirl()
+      return await this.getGames()
     }
   }
 
   /**
-   * Scrape info from FitGirl game page.
+   * Scrape info from game page.
    * 
    * @param {String} link 
    */
-  getFitgirlGame = async (link) => {
-    const res = await ipcRenderer.invoke('fgGame', link)
+  getGame = async (link) => {
+    const res = await ipcRenderer.invoke('getGame', link)
     return res
   }
 }

@@ -46,7 +46,7 @@ class GameListItem extends React.Component {
    */
   getImage = async () => {
     try {
-      const image = await ipcRenderer.invoke('getFitgirlImage', (this.link))
+      const image = await ipcRenderer.invoke('getImage', (this.link))
   
       this.setState({image: image})
     } catch(e) { console.log(e) }

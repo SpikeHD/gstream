@@ -42,7 +42,7 @@ class GameList extends React.Component {
    * Handles a manual refresh.
    */
   handleUpdate = () => {
-    scraper.getFitgirl().then(fg => {
+    scraper.getGames().then(fg => {
       this.setState({games: fg})
     })
   }
@@ -53,7 +53,7 @@ class GameList extends React.Component {
    * @param {String} query 
    */
   getGames = async (query) => {
-    let arr = await scraper.getCacheFitgirl()
+    let arr = await scraper.getGameCache()
     if (query && query.length > 0) {
       arr = arr.filter(g => g.name.toLowerCase().replace(/[^a-zA-Z0-9 ]/g, '').includes(query))
     }

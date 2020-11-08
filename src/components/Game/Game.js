@@ -38,7 +38,7 @@ class Game extends React.Component {
    * Gets all links associated with game download (torrent and direct).
    */
   getLinks = async () => {
-    const data = await scraper.getFitgirlGame(this.mainLink)
+    const data = await scraper.getGame(this.mainLink)
     this.setState({links: this.parseLinks(data.items), image: data.image, description: data.description, loaded: true})
   }
 
