@@ -57,3 +57,12 @@
 .dlpopup .popupClose:hover {
   border: none !important;
 }
+
+.dlpopup .red {
+  color: red;
+  font-size: 14px;
+}
+
+.dlpopup .red a {
+  text-decoration: underline;
+}

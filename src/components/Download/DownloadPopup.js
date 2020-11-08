@@ -57,7 +57,6 @@ class DownloadPopup extends React.Component {
   startMagnetDownload = (magnet) => {
     ipcRenderer.invoke('startDownload', [magnet, this.state.path])
     this.props.closePopup()
-    this.forceUpdate()
   }
 
   /**
@@ -82,6 +81,11 @@ class DownloadPopup extends React.Component {
     this.forceUpdate()
   }
 
+  openProtonHelp = () => {
+    const link = 'https://www.reddit.com/r/Steam/comments/99fjzw/steam_proton_for_non_steam_applications/'
+    window.require('electron').shell.openExternal(link)
+  }
+
   render() {
     return (
       <div className="dlpopup">
@@ -93,6 +97,9 @@ class DownloadPopup extends React.Component {
           Download Location:
           <input type="text" id="directory" ref={this.dirInput} onChange={this.setDownloadDir} placeholder="Path..." value={this.state.path}></input>
           <button className="browseButton" onClick={this.handleDirSelect}><FontAwesomeIcon icon={faFolderOpen} /> Browse...</button>
+          {this.makeDefaultPath().startsWith('/') ? <div className="red">
+            Hey! I noticed you aren't using Windows! I'm sure you may already know how to get you program running, but in case you don't, take a look at <a target="_blank" onClick={this.openProtonHelp}>this!</a>
+          </div> : null}
         </div>
         <div className="popup-section">
           <button className={this.state.path.length > 0 ? null:'greyed-out'} onClick={() => this.state.path.length > 0 ? this.startMagnetDownload(this.props.magnet) : null}>Start Download</button>
