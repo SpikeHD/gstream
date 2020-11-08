@@ -41,15 +41,6 @@ class DownloadPopup extends React.Component {
   }
 
   /**
-   * Set download path.
-   */
-  setPath = async () => {
-    ipcRenderer.invoke('getPath', 'home').then(path => {
-      this.setState({path: path})
-    })
-  }
-
-  /**
    * Send torrent link to main process for download.
    * 
    * @param {String} magnet 

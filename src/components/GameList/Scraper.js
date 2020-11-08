@@ -5,7 +5,7 @@ let ipcRenderer
 class Scraper {
   constructor(win, path, ipc) {
     fs = win.require('fs')
-    fgCache = path + '/fg.json'
+    fgCache = path
     ipcRenderer = ipc
   }
 
@@ -18,15 +18,15 @@ class Scraper {
     const games = await ipcRenderer.invoke('allGames')
   
     // Caching Section
-    if (!fs.existsSync(fgCache + '/fg.json')) {
+    if (!fs.existsSync(fgCache)) {
       if (!fs.existsSync(fgCache)) {
         await fs.mkdirSync(fgCache)
       }
   
-      fs.writeFileSync(fgCache + '/fg.json', JSON.stringify(games), 'utf-8')
+      fs.writeFileSync(fgCache, JSON.stringify(games), 'utf-8')
     } else {
-      let data = JSON.parse(fs.readFileSync(fgCache + '/fg.json'))
-      fs.writeFileSync(fgCache + '/fg.json', JSON.stringify(data), 'utf-8')
+      let data = JSON.parse(fs.readFileSync(fgCache))
+      fs.writeFileSync(fgCache, JSON.stringify(data), 'utf-8')
     }
   
     return games.filter((g, i) => games.indexOf(g) === i)
@@ -36,8 +36,8 @@ class Scraper {
    * Get cached games from appData.
    */
   getGameCache = async () => {
-    if (fs.existsSync(fgCache + '/fg.json')) {
-      const games = await JSON.parse(fs.readFileSync(fgCache + '/fg.json'))
+    if (fs.existsSync(fgCache)) {
+      const games = await JSON.parse(fs.readFileSync(fgCache))
       return await games.filter((g, i) => games.indexOf(g) === i)
     } else {
       return await this.getGames()

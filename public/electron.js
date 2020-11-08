@@ -44,6 +44,12 @@ ipcMain.handle('getPath', (e, arg) => {
   return app.getPath(arg)
 })
 
+ipcMain.handle('getCachePath', (e, arg) => {
+  // TODO grab proper cache file from settings
+  arg = '/gstream/fg.json'
+  return app.getPath('appData') + arg
+})
+
 ipcMain.handle('allGames', async () => {
   return await fg.getAllGames()
 })
