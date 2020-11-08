@@ -13,9 +13,13 @@ class DownloadPage extends React.Component {
       torrents: []
     }
 
-    setInterval(() => {
+    this.interval = setInterval(() => {
       this.getTorrentDetails()
     }, 500)
+  }
+
+  componentWillUnmount = () => {
+    clearInterval(this.interval)
   }
 
   getTorrentDetails = async () => {

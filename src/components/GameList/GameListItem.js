@@ -8,6 +8,7 @@ class GameListItem extends React.Component {
 
     this.name = props.name
     this.link = props.link
+    this.interval = null
     this.renderedDOM = null
 
     ipcRenderer = window.require('electron').ipcRenderer
@@ -16,11 +17,15 @@ class GameListItem extends React.Component {
   }
 
   componentDidMount = () => {
-    setInterval(() => {
+    this.interval = setInterval(() => {
       if (this.state.image === placeholder && this.isVisible(this.renderedDOM)) {
         this.getImage()
       }
-    }, 1000)
+    }, 500)
+  }
+
+  componentWillUnmount = () => {
+    clearInterval(this.interval)
   }
 
   isVisible = (e) => {
@@ -45,7 +50,7 @@ class GameListItem extends React.Component {
 
   render() {
     return (
-      <div ref={itm => this.renderedDOM = itm} onScroll={this.handleScroll} className="gameListItem" link={this.link} onClick={this.getGame}>
+      <div ref={itm => this.renderedDOM = itm} className="gameListItem" link={this.link} onClick={this.getGame}>
         <img src={this.state.image} alt="Game Screenshot" width="250"/>
         <p className="title">{this.name}</p>
       </div>
