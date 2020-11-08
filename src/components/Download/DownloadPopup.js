@@ -10,13 +10,13 @@ class DownloadPopup extends React.Component {
 
     this.magnet = props.magnet
     this.clicked = false
-    this.state = {defaultPath: '', path: ''}
+    this.state = {path: ''}
 
     ipcRenderer = window.require('electron').ipcRenderer
   }
 
   componentDidMount = () => {
-    this.setState({defaultPath: this.makeDefaultPath()})
+    this.setState({path: this.makeDefaultPath()})
   }
 
   /**
@@ -46,7 +46,7 @@ class DownloadPopup extends React.Component {
    */
   setPath = async () => {
     ipcRenderer.invoke('getPath', 'home').then(path => {
-      this.setState({defaultPath: path, path: path})
+      this.setState({path: path})
     })
   }
 
@@ -75,8 +75,11 @@ class DownloadPopup extends React.Component {
    */
   handleDirSelect = async () => {
     let path = await ipcRenderer.invoke('openDirSelect')
-    if (!path || path.length >= 0) return
-    this.setState({defaultPath: path, path: path})
+    if (!path || path.length <= 0) return
+
+    if (typeof(path) === 'array') path = path[0]
+
+    this.setState({path: path})
     this.forceUpdate()
   }
 
@@ -94,11 +97,11 @@ class DownloadPopup extends React.Component {
       }>
         <div className="popup-section">
           Download Location:
-          <input type="text" id="directory" ref={this.dirInput} onChange={this.setDownloadDir} placeholder="Path..." defaultValue={this.state.defaultPath}></input>
+          <input type="text" id="directory" ref={this.dirInput} onChange={this.setDownloadDir} placeholder="Path..." value={this.state.path}></input>
           <button className="browseButton" onClick={this.handleDirSelect}><FontAwesomeIcon icon={faFolderOpen} /> Browse...</button>
         </div>
         <div className="popup-section">
-          <button onClick={() => this.startMagnetDownload(this.props.magnet)}>Start Download</button>
+          <button className={this.state.path.length > 0 ? null:'greyed-out'} onClick={() => this.state.path.length > 0 ? this.startMagnetDownload(this.props.magnet) : null}>Start Download</button>
         </div>
       </div>
     )
