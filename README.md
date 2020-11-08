@@ -23,10 +23,8 @@ Download the lastest release for your platform [here](https://github.com/SpikeHD
 
 If you plan on contributing (thank you!), here's what you should know:
 
-* `npm run start` - Starts the react server. This will *not* open it in the browser
-* `npm run electron` - Starts the electron instance
-* `npm run pack` - Automatically builds with React as well as with electron.
-* `npm run dist`- Builds the executable. You'll find it in `./dist/`
+* `npm run start` - Starts the react server and Electron instance.
+* `npm run build`- Builds the React app and the executable. You'll find it in `./dist/`.
 
 If you are on Linux, you must have `wine` installed in order to compile for Windows.
 
