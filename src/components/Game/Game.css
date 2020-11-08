@@ -13,7 +13,7 @@
   color: lightgray;
 }
 
-#game-root button {
+.downloads button {
   margin-left: 50px;
   display: block;
   background: none;
@@ -23,14 +23,14 @@
   padding: 10px;
 }
 
-#game-root button:hover {
+.downloads button:hover {
   cursor: pointer;
   color: lightgrey;
 
   transition: color 0.3s;
 }
 
-#game-root button:focus {
+.downloads button:focus {
   outline: none;
 }
 

@@ -36,6 +36,10 @@ app.whenReady().then(() => {
   if (!isDev) win.removeMenu()
 })
 
+ipcMain.handle('getPlatform', () => {
+  return process.platform
+})
+
 ipcMain.handle('getPath', (e, arg) => {
   return app.getPath(arg)
 })
@@ -55,7 +59,7 @@ ipcMain.handle('getTorrent', async (e, arg) => {
 })
 
 ipcMain.handle('openDirSelect', async (args) => {
-  return dialog.showOpenDialogSync(win, {
+  return await dialog.showOpenDialogSync(win, {
     title: args.title,
     properties: ['openDirectory']
   })

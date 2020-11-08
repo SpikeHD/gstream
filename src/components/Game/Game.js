@@ -91,7 +91,7 @@ class Game extends React.Component {
           <div id="game-description">
             <div><b>{this.name}</b>
 
-            <p>{this.state.loaded ? this.state.description : <div className="loading"></div>}</p>
+            <div>{this.state.loaded ? this.state.description : <div className="loading"></div>}</div>
             </div>
           </div>
         </div>
