@@ -2,12 +2,21 @@ const cheerio = require('cheerio')
 const axios = require('axios')
 
 /**
- * Get JSON formatted fitgirl repacks.
+ * Meta info for module display
+ */
+module.exports.meta = {
+  name: 'FitGirl',
+  description: 'Games list for FitGirl Repacks',
+  cachePath: 'fg.json',
+  imageCache: null
+}
+
+/**
+ * Get JSON formatted games list.
+ * 
+ * @param {String} homepage
  */
 module.exports.getAllGames = async (homepage) => {
-  // Placeholder while settings page doesn't exist yet
-  homepage = 'https://fitgirl-repacks.to/all-my-repacks-a-z/'
-
   const res = await axios.get(homepage)
   let $ = cheerio.load(res.data)
   let games = []
@@ -28,7 +37,8 @@ module.exports.getAllGames = async (homepage) => {
     list.each((i, e) => {
       games.push({
         name: $(e).find('a').text().trim().split(' - v')[0],
-        link: $(e).find('a').prop('href')
+        link: $(e).find('a').prop('href'),
+        image: null
       })
     })
   }
@@ -37,7 +47,7 @@ module.exports.getAllGames = async (homepage) => {
 }
 
 /**
- * Get details of FitGirl game page.
+ * Get details of game page.
  * 
  * @param {String} link 
  */

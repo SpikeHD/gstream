@@ -1,0 +1,43 @@
+.select-list {
+  color: white;
+  position: relative;
+  font-size: 14px;
+  width: 150px;
+}
+
+.select-list button {
+  padding: 6px 0;
+  width: inherit;
+  background: none;
+  color: white;
+  border: 1px solid white;
+  outline: none;
+}
+
+.select-list button:hover {
+  cursor: pointer;
+}
+
+.select-options {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  position: absolute;
+  width: inherit;
+}
+
+.select-options li {
+  padding: 6px 0;
+  border: 1px solid white;
+  border-top: none;
+  text-align: center;
+  background: #3b4f5e;
+}
+
+.select-options li:hover {
+  cursor: pointer;
+}
+
+.select-options li:last-child {
+  border-radius: 0 0 6px 6px; 
+}

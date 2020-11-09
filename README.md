@@ -17,16 +17,44 @@ Download the lastest release for your platform [here](https://github.com/SpikeHD
 - [ ] Direct link downloader
 - [x] Torrent link downloader
 - [ ] Better UI
-- [ ] More scrapers
+- [x] More scrapers (technically done because of module support)
+- [ ] Other types (ROMs n' stuff maybe?)
 
 # Development
 
 If you plan on contributing (thank you!), here's what you should know:
 
-* `npm run start` - Starts the react server. This will *not* open it in the browser
-* `npm run electron` - Starts the electron instance
-* `npm run pack` - Automatically builds with React as well as with electron.
-* `npm run dist`- Builds the executable. You'll find it in `./dist/`
+* `npm run start` - Starts the react server and Electron instance.
+* `npm run build`- Builds the React app and the executable. You'll find it in `./dist/`.
+
+If you are on Linux, you must have `wine` installed in order to compile for Windows. You do not need to build a binary when contributing, only do so when you want to make sure the installation works.
+
+## Modules
+
+You may notice the `modules` folder. That folder will contain all of the available site parsing tools. You can look at the existing ones as examples.
+
+If you plan on making a new one, it *must* follow this format:
+
+Module must contain:
+  * `module.exports.meta` object containing the fields:
+    * `name` - Name of module
+    * `description` - Description of module
+    * `cachePath` - Name of cache.json file (eg. `mymodule.json`)
+    * `imageCachePath` - Name of folder containing images (eg. `mymodule`, since it prepends the `{appData}/images/` path)
+    
+  * `async getAllGames(page)` function that returns an array of objects, each containing the fields:
+    * `name` - Game name
+    * `link` - Link to game page
+    * optional `image` - Link to image
+    
+  * `async getGame(link)` function that returns an object containing the fields:
+    * `items` - Contains an array of objects with `name` and `link` fields
+    * `description` - Game description
+    * optional `image` - Link to image
+
+**Note:** You do **not** need to worry about handling cache. This is done for you.
+
+Once the module is written properly, it should automatically be found in the module list on the settings page. Select it to test it out!
 
 ### Heads up!
 

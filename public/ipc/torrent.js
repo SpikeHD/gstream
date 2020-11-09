@@ -3,12 +3,24 @@ const fs = require('fs')
 const { app } = require('electron')
 let client = new WebTorrent()
 
+// As soon as we're imported, make sure there's a cache file
 try {
   JSON.parse(fs.readFileSync(app.getPath('appData') + '/gstream/torrents.json'))
 } catch (e) {
   fs.writeFileSync(app.getPath('appData') + '/gstream/torrents.json', '[]', 'utf-8')
 }
 
+/**
+ * Start or resume a torrent download.
+ * 
+ * THe "inital" boolean will determine whether it is
+ * the first time the torrent has begun downloading before
+ * or not.
+ * 
+ * @param {String} magnet 
+ * @param {String} path 
+ * @param {Boolean} initial 
+ */
 exports.startDownload = async (magnet, path, initial = false) => {
   const cache = this.readCache()
 
@@ -40,6 +52,9 @@ exports.startDownload = async (magnet, path, initial = false) => {
   }, 10000)
 }
 
+/**
+ * Returns a formatted Object with client progress.
+ */
 exports.getClientProgress = async () => {
   return {
     progress: client.progress,
@@ -49,6 +64,9 @@ exports.getClientProgress = async () => {
   }
 }
 
+/**
+ * Returns a formatted Array of details for each torrent.
+ */
 exports.getAllTorrentsDetails = async () => {
   let cached = this.readCache()
   let list = client.torrents.map(t => {
@@ -72,6 +90,11 @@ exports.getAllTorrentsDetails = async () => {
   return list
 }
 
+/**
+ * Get details of one torrent. Uses cache and live.
+ * 
+ * @param {String} arg 
+ */
 exports.getIndividualTorrentsDetails = async (arg) => {
   const t = client.torrents.find(t => t.magnetURI.includes(arg) || arg.includes(t.magnetURI) || t.name === arg)
   const cached = await this.getFromCache(arg)
@@ -96,6 +119,11 @@ exports.getIndividualTorrentsDetails = async (arg) => {
   }
 }
 
+/**
+ * Pauses a torrent.
+ * 
+ * @param {String} arg 
+ */
 exports.pauseTorrent = async (arg) => {
   const t = client.torrents.find(t => t.magnetURI.includes(arg) || arg.includes(t.magnetURI) || t.name === arg)
 
@@ -107,6 +135,11 @@ exports.pauseTorrent = async (arg) => {
   } else return false
 }
 
+/**
+ * Resume a torrent.
+ * 
+ * @param {String} arg 
+ */
 exports.resumeTorrent = async (arg) => {
   const cache = this.readCache()
   const t = cache.find(t => t.magnetURI.includes(arg) || arg.includes(t.magnetURI) || t.name === arg)
@@ -117,6 +150,11 @@ exports.resumeTorrent = async (arg) => {
   } else return false
 }
 
+/**
+ * Stop and remove local files of a torrent.
+ * 
+ * @param {String} arg 
+ */
 exports.destroyTorrent = async (arg) => {
   const t = client.torrents.find(t => t.magnetURI.includes(arg) || arg.includes(t.magnetURI) || t.name === arg)
 
@@ -129,6 +167,11 @@ exports.destroyTorrent = async (arg) => {
 
 /** Caching. Used for storing destroyed torrents so they can be unpaused later, or to start torrents after the program has closed and reopened */
 
+/**
+ * Update local torrent cache with current torrent details.
+ * 
+ * @param {Object} torrent 
+ */
 exports.updateCache = async (torrent) => {
   const current = await this.readCache()
   const found = current.find(t => t.magnetURI.includes(torrent.magnetURI) || torrent.magnetURI.includes(t.magnetURI))
@@ -152,6 +195,11 @@ exports.updateCache = async (torrent) => {
   return true
 }
 
+/**
+ * Inital write to cache of a torrent.
+ * 
+ * @param {Object} torrent 
+ */
 exports.writeToCache = async (torrent) => {
   const current = await this.readCache()
   if (current.find(t => t.magnetURI.includes(torrent.magnet))) return false
@@ -173,11 +221,23 @@ exports.writeToCache = async (torrent) => {
   return true
 }
 
+/**
+ * Get torrent cache using magnet.
+ * 
+ * @param {String} magnet 
+ */
 exports.getFromCache = async (magnet) => {
   const current = await this.readCache()
   return current.find(t => t.magnetURI.includes(magnet))
 }
 
+/**
+ * Removes a torrent from cache.
+ * 
+ * Should be done when removing from the client as well.
+ * 
+ * @param {String} magnet 
+ */
 exports.removeFromCache = async (magnet) => {
   const current = await this.readCache()
   const cacheInstance = current.find(t => magnet.includes(t.magnetURI))
@@ -188,6 +248,9 @@ exports.removeFromCache = async (magnet) => {
   await fs.writeFileSync(app.getPath('appData') + '/gstream/torrents.json', JSON.stringify(current), 'utf-8')
 }
 
+/**
+ * Shorthand for returning the entire cache file.
+ */
 exports.readCache = () => {
   return JSON.parse(fs.readFileSync(app.getPath('appData') + '/gstream/torrents.json'))
 }

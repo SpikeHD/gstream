@@ -1,7 +1,7 @@
 .dlpopup {
   position: fixed;
   left: 50%;
-  top: 200%;
+  top: 50%;
   transform: translate(-50%, -50%);
   padding: 20px;
   background: #3b4f5e;
@@ -9,7 +9,7 @@
   text-align: center;
   border-radius: 5px;
   border: 1px solid white;
-  transition: top 0.2s
+  transition: top 0.2s;
 }
 
 .popup-section {
@@ -19,4 +19,50 @@
 .dlpopup input[type="text"] {
   font-size: 16px;
   width: 60%;
+}
+
+.dlpopup button {
+  display: inline-block;
+  background: none;
+  margin: 10px;
+  padding: 6px;
+  border: 1px solid white;
+  border-radius: 6px;
+  color: white;
+  outline: none;
+  font-size: 18px;
+  transition: color border 0.2s;
+}
+
+.dlpopup button:not(.greyed-out):hover {
+  color: lightgrey;
+  border: 1px solid lightgrey;
+  cursor: pointer;
+}
+
+.dlpopup button.greyed-out {
+  color: lightgrey;
+  border: 1px solid lightgrey;
+}
+
+.dlpopup .popupClose {
+  border: none;
+  margin: 0;
+  transition: color 0.2s;
+  margin-left: 100%;
+  float: right;
+  text-align: right;
+}
+
+.dlpopup .popupClose:hover {
+  border: none !important;
+}
+
+.dlpopup .red {
+  color: red;
+  font-size: 14px;
+}
+
+.dlpopup .red a {
+  text-decoration: underline;
 }

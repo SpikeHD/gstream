@@ -14,8 +14,8 @@ class Game extends React.Component {
 
     let params = qs.parse(this.props.location.search, { ignoreQueryPrefix: true })
 
-    this.name = decodeURIComponent(params.name)
-    this.mainLink = decodeURIComponent(params.link)
+    this.name = params.name
+    this.mainLink = params.link
 
     this.state = {
       links: [],
@@ -28,23 +28,33 @@ class Game extends React.Component {
 
   componentDidMount = async () => {
     let ipcRenderer = window.require('electron').ipcRenderer
-    let path = ipcRenderer.invoke('getPath', 'appData')
+    let cache = await ipcRenderer.invoke('getSettings').cachePath
+    let path = await ipcRenderer.invoke('getCachePath', cache)
     
     scraper = new Scraper(window, path, ipcRenderer)
     await this.getLinks()
   }
 
+  /**
+   * Gets all links associated with game download (torrent and direct).
+   */
   getLinks = async () => {
-    const data = await scraper.getFitgirlGame(this.mainLink)
+    const data = await scraper.getGame(this.mainLink)
     this.setState({links: this.parseLinks(data.items), image: data.image, description: data.description, loaded: true})
   }
 
+  /**
+   * Output formatted links for each raw link.
+   * 
+   * @param {Array} links 
+   */
   parseLinks = (links) => {
     let domLinks = []
 
     links.forEach(l => {
       l.links.forEach(internal => {
         let clickFunc
+        console.log(internal.link)
         if (internal.link.startsWith('magnet')) {
           clickFunc = this.doDownloadPopup
         }
@@ -55,12 +65,20 @@ class Game extends React.Component {
     return domLinks
   }
 
+  /**
+   * Changes the current popup elements "top" attribute which makes it appear.
+   * 
+   * @param {Object} evt 
+   */
   doDownloadPopup = (evt) => {
     const link = evt.target.getAttribute('link')
     this.setState({popup: true, curLink: link})
-    document.getElementsByClassName('bm-overlay')[0].style.opacity = 1
+    this.forceUpdate()
   }
 
+  /**
+   * Back button.
+   */
   goHome = () => {
     window.location.assign('#/')
   }
@@ -68,14 +86,14 @@ class Game extends React.Component {
   render() {
     return(
       <div id="game-root">
-        <DownloadPopup magnet={this.state.curLink} popup={this.state.popup}/>
+        {this.state.popup ? <DownloadPopup magnet={this.state.curLink} closePopup={() => this.setState({popup: false})}/> : null}
         <button className="backButton" onClick={this.goHome}><FontAwesomeIcon icon={faArrowLeft}/></button>
         <div id="details">
           <img src={this.state.image} alt="Game Cover"/>
           <div id="game-description">
             <div><b>{this.name}</b>
 
-            <p>{this.state.loaded ? this.state.description : <div className="loading"></div>}</p>
+            <div>{this.state.loaded ? this.state.description : <div className="loading"></div>}</div>
             </div>
           </div>
         </div>

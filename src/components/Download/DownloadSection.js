@@ -29,24 +29,42 @@ class DownloadSection extends React.Component {
     clearInterval(updateInterval)
   }
 
+  /**
+   * Sends to main process which will delete downloaded files and torrent listing.
+   */
   stopTorrent = () => {
     ipcRenderer.invoke('destroyTorrent', this.state.torrent.magnetURI).then(removed => {
       if (removed) this.setState({paused: true, loaded: false})
     })
   }
 
+  /**
+   * Sends to main process which will remove it from the client.
+   * 
+   * Since the torrent is not technically removed, only paused, we
+   * store it in cache and return the cache result to the section element
+   * so we can still display details.
+   */
   pauseTorrent = () => {
     ipcRenderer.invoke('pauseTorrent', this.state.torrent.magnetURI).then(paused => {
       if (paused) this.setState({paused: true})
     })
   }
 
+  /**
+   * Sends to the main process which will unpause the torrent.
+   */
   startTorrent = () => {
     ipcRenderer.invoke('resumeTorrent', this.state.torrent.magnetURI).then(resumed => {
       if (resumed) this.setState({paused: false, setInitialPlay: false})
     })
   }
 
+  /**
+   * Sends to the main process which will open the file exporer.
+   * 
+   * This works no matter which platform.
+   */
   openFiles = () => {
     ipcRenderer.invoke('openInFiles', this.state.torrent.path)
   }

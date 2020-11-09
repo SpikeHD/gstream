@@ -13,7 +13,7 @@
   color: lightgray;
 }
 
-#game-root button {
+.backButton {
   margin-left: 50px;
   display: block;
   background: none;
@@ -23,19 +23,19 @@
   padding: 10px;
 }
 
-#game-root button:hover {
+.backButton:hover {
   cursor: pointer;
   color: lightgrey;
 
   transition: color 0.3s;
 }
 
-#game-root button:focus {
+.backButton:focus {
   outline: none;
 }
 
 #game-root img {
-  width: 200px;
+  height: 200px;
   padding: 12px;
 }
 

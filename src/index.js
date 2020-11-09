@@ -6,6 +6,7 @@ import './index.css';
 import App from './App';
 import Game from './components/Game/Game'
 import DownloadPage from './components/Download/DownloadPage'
+import SettingsPage from './components/Settings/SettingsPage'
 import Sidebar from './components/Sidebar/Sidebar'
 import DownloadBarBottom from './components/Download/DownloadBarBottom'
 
@@ -17,6 +18,7 @@ ReactDOM.render(
       <Route exact path="/" component={App}/>
       <Route path="/game" component={Game}/>
       <Route path="/downloads" component={DownloadPage}/>
+      <Route path="/settings" component={SettingsPage}/>
     </Switch>
   </HashRouter>
   <DownloadBarBottom />

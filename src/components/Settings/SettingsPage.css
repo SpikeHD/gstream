@@ -1,0 +1,48 @@
+#settingsPage {
+  /* General */
+  padding: 50px;
+  color: white;
+
+  /* Flex */
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+}
+
+.settingsSection {
+  width: 75%;
+  margin: 10px;
+  padding: 12px;
+  border: 1px solid white;
+  border-radius: 6px;
+}
+
+.settingsSection .left {
+  float: left;
+}
+
+.settingsSection .right {
+  float: right;
+}
+
+.settingsSection .right div,
+.settingsSection .left div {
+  vertical-align: middle;
+}
+
+.settingsSection select {
+  background: none;
+  color: white;
+  border: 1px solid white;
+  padding: 6px;
+  font-size: inherit;
+  outline: none;
+}
+
+.settingsSection .red {
+  margin: auto;
+  display: block;
+  color: red;
+  font-size: 16px;
+}
