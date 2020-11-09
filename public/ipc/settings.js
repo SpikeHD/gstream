@@ -6,7 +6,7 @@ const sPath = app.getPath('appData') + '/gstream/settings.json'
 try {
   JSON.parse(fs.readFileSync(sPath))
 } catch (e) {
-  fs.writeFileSync(sPath, '{"module": "blank", "site": "blank", "cachePath":"blank.json"}', 'utf-8')
+  fs.writeFileSync(sPath, '{"module": "None", "site": "blank", "cachePath":"blank.json"}', 'utf-8')
   fs.writeFileSync(app.getPath('appData') + '/gstream/blank.json', '[]', 'utf-8')
 }
 
