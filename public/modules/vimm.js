@@ -32,9 +32,7 @@ module.exports.getAllGames = async (homepage) => {
   // Is that weird? Is liking the other for loop types better weird?
   // I hope not.
   for (let i = 0; i < consoleCount; i++) {
-    console.log(i)
     for (let x = 0; x < alphabet.length; x++) {
-      console.log(x)
       // Get console name from href to construct proper link
       const consoleName =$(consoles[i]).attr('href').split('/vault/')[1]
       const aToZ = await axios.get(root + '/vault/?p=list&system=' + consoleName + '&section=' + alphabet[x].toUpperCase())
@@ -58,8 +56,6 @@ module.exports.getAllGames = async (homepage) => {
     }
   }
 
-  console.log(games)
-
   return games
 }
 
@@ -71,9 +67,9 @@ module.exports.getAllGames = async (homepage) => {
 module.exports.getGame = async (link) => {
   const root = link.split('/vault/')[0]
   const res = await axios.get(link)
-  const $ = cheerio.load(res.data)
+  let $ = cheerio.load(res.data)
+  const name = $('#innerMain h2 span:not(.sectionTitle)').text().trim()
 
-  let image = root +  $('#innerMain img[src*="type=box"]').attr('src')
   const links = [{
     name: 'Main',
     links: [{
@@ -82,13 +78,16 @@ module.exports.getGame = async (link) => {
     }]
   }]
 
-  // Just in case there isn't any box art, just get the first image.
-  if (!image) {
-    image = root + $('#innerMain img').not('img[src="/images/clear.gif"]').first().attr('src')
-  }
-
   // TODO make the description... good... I guess
   const description = `No game information available on Vimm.`
+
+  // Get image from covers project
+  const search = await axios.get('http://thecoverproject.net/view.php?searchstring=' + name.split(' ').join('+'))
+  $ = cheerio.load(search.data)
+
+  const firstGame = await axios.get('http://thecoverproject.net/' + $('.articleText a').first().attr('href'))
+  $ = cheerio.load(firstGame.data)
+  const image = $('.pageBody img').first().attr('src')
 
   return {
     items: links,
