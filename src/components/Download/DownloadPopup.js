@@ -68,7 +68,7 @@ class DownloadPopup extends React.Component {
     let path = await ipcRenderer.invoke('openDirSelect')
     if (!path || path.length <= 0) return
 
-    if (typeof(path) === 'array') path = path[0]
+    if (Array.isArray(path)) path = path[0]
 
     this.setState({path: path})
     this.forceUpdate()
