@@ -14,17 +14,19 @@ class DownloadPopup extends React.Component {
     ipcRenderer = window.require('electron').ipcRenderer
   }
 
-  componentDidMount = () => {
-    this.setState({path: this.makeDefaultPath()})
+  componentDidMount = async () => {
+    this.setState({path: await this.makeDefaultPath()})
   }
 
   /**
    * Make a default file path based on platform
    */
-  makeDefaultPath = () => {
-    const platform = ipcRenderer.invoke('getPlatform')
+  makeDefaultPath = async () => {
+    const platform = await ipcRenderer.invoke('getPlatform')
     const username = window.require('os').userInfo().username
     let str
+
+    console.log(platform)
 
     switch (platform) {
       case 'darwin':
@@ -88,7 +90,7 @@ class DownloadPopup extends React.Component {
           Download Location:
           <input type="text" id="directory" ref={this.dirInput} onChange={this.setDownloadDir} placeholder="Path..." value={this.state.path}></input>
           <button className="browseButton" onClick={this.handleDirSelect}><FontAwesomeIcon icon={faFolderOpen} /> Browse...</button>
-          {this.makeDefaultPath().startsWith('/') ? <div className="red">
+          {this.state.path.startsWith('/') ? <div className="red">
             Hey! I noticed you aren't using Windows! I'm sure you may already know how to get you program running, but in case you don't, take a look at <a target="_blank" onClick={this.openProtonHelp}>this!</a>
           </div> : null}
         </div>

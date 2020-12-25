@@ -10,6 +10,7 @@ class GameListItem extends React.Component {
     this.link = props.link
     this.interval = null
     this.renderedDOM = null
+    this.retries = 0
 
     ipcRenderer = window.require('electron').ipcRenderer
 
@@ -20,10 +21,10 @@ class GameListItem extends React.Component {
   componentDidMount = () => {
     // Routinely check if the element is visible. If it is, load it's image
     this.interval = setInterval(async () => {
-      if (this.state.image === placeholder && this.isVisible(this.renderedDOM)) {
+      if (this.state.image === placeholder && this.retries <= 15 && this.isVisible(this.renderedDOM)) {
         await this.getImage()
       }
-    }, 500)
+    }, 1000)
   }
 
   componentWillUnmount = () => {
@@ -47,7 +48,11 @@ class GameListItem extends React.Component {
   getImage = async () => {
     try {
       const image = await ipcRenderer.invoke('getImage', (this.link))
-      this.setState({image: image})
+      if (image !== null && image !== undefined) {
+        this.setState({image: image})
+      }
+
+      this.retries++
     } catch(e) { console.log(e) }
   }
 

@@ -57,6 +57,8 @@ class Game extends React.Component {
         console.log(internal.link)
         if (internal.link.startsWith('magnet')) {
           clickFunc = this.doDownloadPopup
+        } else if (internal.link.startsWith('')) {
+          clickFunc = this.doDownloadPopup
         }
         domLinks.push(<a onClick={clickFunc} key={internal.link} link={internal.link}>{internal.title}</a>)
       })

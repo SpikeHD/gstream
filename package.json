@@ -15,6 +15,7 @@
     "axios": "^0.21.0",
     "cheerio": "^1.0.0-rc.3",
     "electron-is-dev": "^1.2.0",
+    "progress-stream": "^2.0.0",
     "qs": "^6.9.4",
     "rawger": "^1.3.2",
     "react": "^17.0.1",
@@ -32,7 +33,7 @@
     "react-build": "react-scripts build",
     "react-test": "react-scripts test --env=jsdom",
     "react-eject": "react-scripts eject",
-    "electron-build": "electron-builder -l && electron-builder -w",
+    "electron-build": "electron-builder -w && electron-builder -l",
     "release": "yarn react-build && electron-builder",
     "build": "yarn react-build && yarn electron-build",
     "start": "concurrently \"cross-env BROWSER=none yarn react-start\" \"wait-on http://localhost:3000 && electron .\""

@@ -65,33 +65,45 @@ module.exports.getAllGames = async (homepage) => {
  * @param {String} link 
  */
 module.exports.getGame = async (link) => {
-  const root = link.split('/vault/')[0]
-  const res = await axios.get(link)
-  let $ = cheerio.load(res.data)
-  const name = $('#innerMain h2 span:not(.sectionTitle)').text().trim()
-
-  const links = [{
-    name: 'Main',
-    links: [{
-      title: 'Download',
-      link: root + $('form#download_form').first().attr('action')
+  try {
+    const res = await axios.get(link)
+    let $ = cheerio.load(res.data)
+    const name = $('#innerMain h2 span:not(.sectionTitle)').text().trim().replace(/[^0-9a-zA-Z ]/g, '')
+    const mediaId = $('input[name="mediaId"]').val()
+    let image
+  
+    const links = [{
+      name: 'Main',
+      links: [{
+        title: 'Download',
+        link: 'https://' + $('form#download_form').first().attr('action') + '/?mediaId=' + mediaId
+      }]
     }]
-  }]
-
-  // TODO make the description... good... I guess
-  const description = `No game information available on Vimm.`
-
-  // Get image from covers project
-  const search = await axios.get('http://thecoverproject.net/view.php?searchstring=' + name.split(' ').join('+'))
-  $ = cheerio.load(search.data)
-
-  const firstGame = await axios.get('http://thecoverproject.net/' + $('.articleText a').first().attr('href'))
-  $ = cheerio.load(firstGame.data)
-  const image = $('.pageBody img').first().attr('src')
-
-  return {
-    items: links,
-    image: image,
-    description: description
+  
+    // TODO make the description... good... I guess
+    const description = `No game information available on Vimm.`
+  
+    // Get image from covers project
+    const search = await axios.get('http://thecoverproject.net/view.php?searchstring=' + name.split(' ').join('+'))
+    $ = cheerio.load(search.data)
+  
+    if ($('.articleText a').first().attr('href')) {
+      const firstGame = await axios.get('http://thecoverproject.net/' + $('.articleText a').first().attr('href'))
+      $ = cheerio.load(firstGame.data)
+      image = $('.pageBody img[src*="http"]').first().attr('src') 
+    } else image = null
+  
+    return {
+      items: links,
+      image: image,
+      description: description
+    }
+  } catch(e) {
+    console.log(Object.keys(e))
+    return {
+      items: [],
+      image: null,
+      description: 'Not found'
+    }
   }
 }
