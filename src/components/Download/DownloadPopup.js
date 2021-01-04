@@ -8,7 +8,7 @@ class DownloadPopup extends React.Component {
   constructor(props) {
     super(props)
 
-    this.magnet = props.magnet
+    this.link = props.magnet
     this.state = {path: ''}
 
     ipcRenderer = window.require('electron').ipcRenderer
@@ -25,8 +25,6 @@ class DownloadPopup extends React.Component {
     const platform = await ipcRenderer.invoke('getPlatform')
     const username = window.require('os').userInfo().username
     let str
-
-    console.log(platform)
 
     switch (platform) {
       case 'darwin':
@@ -45,10 +43,11 @@ class DownloadPopup extends React.Component {
   /**
    * Send torrent link to main process for download.
    * 
-   * @param {String} magnet 
+   * @param {String} link 
    */
-  startMagnetDownload = (magnet) => {
-    ipcRenderer.invoke('startDownload', [magnet, this.state.path])
+  startDownload = (link) => {
+    const dlMethod = link.startsWith('magnet') ? 'startDownload' : 'startDirect'
+    ipcRenderer.invoke(dlMethod, [link, this.state.path])
     this.props.closePopup()
   }
 
@@ -95,7 +94,7 @@ class DownloadPopup extends React.Component {
           </div> : null}
         </div>
         <div className="popup-section">
-          <button className={this.state.path.length > 0 ? null:'greyed-out'} onClick={() => this.state.path.length > 0 ? this.startMagnetDownload(this.props.magnet) : null}>Start Download</button>
+          <button className={this.state.path.length > 0 ? null:'greyed-out'} onClick={() => this.state.path.length > 0 ? this.startDownload(this.link) : null}>Start Download</button>
         </div>
       </div>
     )

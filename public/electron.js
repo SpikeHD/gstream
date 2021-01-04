@@ -8,10 +8,10 @@ const gameModule = require(`./modules/${settings.getSettings().module}`)
 settings.setSetting('cachePath', gameModule.meta.cachePath)
 
 const torrent = require('./ipc/torrent')
-//const DirectClient = require('./ipc/direct')
+const DirectClient = require('./ipc/direct')
 const isDev = require("electron-is-dev")
 
-//const directClient = new DirectClient()
+const directClient = new DirectClient()
 
 if (gameModule.meta.imageCache) {
   const images = gameModule.meta.imageCache
@@ -138,9 +138,9 @@ ipcMain.handle('getImage', async (e, link) => {
 /**
  * Chunk for direct downloads
  */
-// ipcMain.handle('startDirect', async (e, args) => directClient.startDownload(args.link, args.folder))
-// ipcMain.handle('stopDirect', async (e, name) => directClient.stopDownload(name))
-// ipcMain.handle('getDetails', async (e, name) => directClient.getDownload(name))
+ipcMain.handle('startDirect', async (e, args) => directClient.startDownload(args[0], args[1]))
+ipcMain.handle('stopDirect', async (e, name) => directClient.stopDownload(name))
+ipcMain.handle('getDetails', async (e, name) => directClient.getDownload(name))
 /**
  * This giant chunk is just the ipc handlers for the torrent functions.
  * They're all basically self-explanatory.

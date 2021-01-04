@@ -1,21 +1,50 @@
 const axios = require('axios')
-const progress = require('progress-stream')
-
+const fs = require('fs')
 class Client {
   constructor() {
     this.downloads = []
   }
 
-  startDownload = async (link, folder, opts) => {
-    const str = progress({
-      time: 1000
-    })
-    const res = await axios.get(link, opts)
+  startDownload = async (link, folder, opts = {}) => {
+    // Option requirements
+    opts.responseType = 'stream'
+    opts.headers = {
+      'connection': 'keep-alive',
+      'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:84.0) Gecko/20100101 Firefox/84.0'
+    }
+
+    link = link.replace('////', '//')
+    console.log(link)
+    const res = await axios.get(link.replace(/\/\/\/\//g, '//'), opts)
     const name = res.data.headers['content-disposition']
-    this.downloads.push({
-      name: name,
-      stream: res.data.pipe(str).pipe(fs.createWriteStream(folder + '/' + name))
+    const size = res.data.headers['content-length']
+    console.log(res.data.headers)
+    const wStream = fs.createWriteStream(folder + '/' + name)
+
+    res.data.pipe(wStream)
+
+    res.data.on('data', (chunk) => {
+      this.downloadProgress(name, chunk.length)
     })
+
+    this.downloads.push({
+      name,
+      data: res.data,
+      stream: wStream,
+      size,
+      progress: 0
+    })
+  }
+
+  downloadProgress = (name, progress) => {
+    const dl = this.getDownload(name)
+    const index = this.downloads.indexOf(dl)
+
+    dl.progress += progress
+
+    this.downloads[index] = dl
+
+    console.log(`Progress! ${dl.progress}/${dl.size}`)
   }
 
   getDownloads = () => {
@@ -29,13 +58,7 @@ class Client {
   stopDownload = (name) => {
     const dl = this.getDownload(name)
     const index = this.downloads.indexOf(dl)
-    
-    // Kill write stream
-    dl.stream.destroy()
-
-    // Remove from array
-    this.downloads.splice(index, 1)
   }
 }
 
-exports = Client
+module.exports = Client
